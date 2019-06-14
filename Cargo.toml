@@ -1,0 +1,9 @@
+[package]
+name = "louis-parser"
+version = "0.1.0"
+authors = ["Christian Egli <christian.egli@sbs.ch>"]
+edition = "2018"
+
+[dependencies]
+pest = "2.0"
+pest_derive = "2.0"

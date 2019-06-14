@@ -1,0 +1,95 @@
+dots = { (ASCII_NONZERO_DIGIT | "-")+ }
+
+// Character-Definition opcodes
+letter_rules = { ("space" | "digit" | "letter" | "punctuation" ) ~ LETTER ~ dots }
+
+uplow_chars = ${ UPPERCASE_LETTER ~ LOWERCASE_LETTER }
+uplow_rule = { "uplow" ~ uplow_chars ~ dots ~ ("," ~ dots)? }
+lowercase_rule = { "lowercase" ~ LOWERCASE_LETTER ~ dots }
+uppercase_rule = { "uppercase" ~ UPPERCASE_LETTER ~ dots }
+litdigit_rule = { "litdigit" ~ ASCII_DIGIT ~ dots }
+sign_rule = { "sign" ~ SYMBOL ~ dots }
+
+character_definition_rules = {letter_rules | uplow_rule |
+			      lowercase_rule | uppercase_rule | litdigit_rule | sign_rule}
+
+// Braille Indicator opcodes
+indicatorsign_rules = { ( "capsletter" | "begcapsword" | "endcapsword" | "begcaps" | "endcaps" | "letsign" | "nocontractsign" | "numsign")  ~ dots }
+noindicator_rules = { ("noletsign" | "noletsignbefore" | "numericnocontchars" | "numericmodechars" | "midendnumericmodechars" ) ~ (LETTER)+ }
+capsmodechars_rule = { "capsmodechars" ~ (LETTER | PUNCTUATION)+ }
+braille_indicator_rules = { indicatorsign_rules | noindicator_rules | capsmodechars_rule}
+
+// Emphasis opcodes
+emphclass_rule = { "emphclass" ~ (LETTER)+ }
+
+// Special Symbol opcodes
+decpoint_rule = { "decpoint" ~ PUNCTUATION ~ dots }
+hyphen_rule = { "hyphen" ~ LETTER ~ dots }
+
+// Special processing opcodes
+capsnocont_rule = { "capsnocont" }
+
+// Translation opcodes
+prefix = { "before" | "after" | "noback" | "nofor" }
+
+translation_opcodes = { "comp6" | "comp6" | "always" | "repeated" |
+		      	"repword" | "largesign" | "word" |
+		      	"syllable" | "nocross" | "joinword" |
+		      	"lowword" | "sufword" |"prfword" |
+		      	"begword" | "begmidword" | "midword" | "midendword"|
+		      	"endword" | "partword" |
+		      	"prepunc" | "postpunc" |
+		      	"begnum" | "midnum" | "endnum" | "joinnum" }
+translation_rule = { prefix? ~ translation_opcodes ~ (LETTER)+ ~ dots }
+
+compbrl_rule = { prefix? ~ "compbrl" ~ (LETTER)+ }
+nocont_rule = { prefix? ~ "nocont" ~  (LETTER)+ }
+contraction_rule = { prefix? ~ "contraction" ~ (LETTER)+ }
+replace_rule = { prefix? ~ "replace" ~ (LETTER)+ ~ (LETTER)+ }
+exactdots_rule = { prefix? ~ "exactdots" ~ "@" ~ dots }
+translation_rules = { compbrl_rule | nocont_rule | replace_rule | contraction_rule | exactdots_rule |
+		      translation_rule}
+
+// Character class opcodes
+class_name = { (ASCII_ALPHANUMERIC)+ }
+class_rule = { "class" ~ class_name ~ (LETTER)+ }
+
+// Swap opcodes
+//swapcd_rule = { "swapcd" name characters dots, dots, dots }
+//swapdd_rule = { "swapdd" name dots, dots, dots ... dotpattern1, dotpattern2, dotpattern3 }
+//swapcc_rule = { "swapcc" name characters characters }
+
+// Context and multipass opcodes
+//context_prefix = { "noback" | "nofor" }
+//test = { ("`" ~ (ASCII_ALPHANUMERIC)+)? ~ "@" ~ (dots)+ ~ ("~" ~ (ASCII_ALPHANUMERIC)+)?}
+//test = { "@" ~ (dots)+ }
+//context_rule = { context_prefix? ~ "context" ~ test ~ action }
+//pass2_rule = { context_prefix? ~ "pass2" ~ test ~ action }
+//pass3_rule = { context_prefix? ~ "pass3" ~ test ~ action }
+//pass4_rule = { context_prefix? ~ "pass4" ~ test ~ action }
+
+// Match opcode
+pre_pattern = { (LETTER)+ }
+post_pattern = { pre_pattern} 
+match_rule = { "match" ~ pre_pattern ~ (LETTER)+ ~ post_pattern ~ dots }
+
+// Miscellaneous Opcodes
+filename = { (ASCII_ALPHANUMERIC | "." | "-" | "_" )+ }
+include_rule = { "include" ~ filename }
+undefined_rule = { "undefined" ~ dots }
+display_rule = { "display" ~ LETTER ~ dots }
+opcode = { "foo" | "bar"}
+multind_rule = { "multind" ~ dots ~ (opcode)+ }
+miscellaneous_rules = { include_rule | undefined_rule | display_rule | multind_rule }
+
+rule = { character_definition_rules |
+       	 braille_indicator_rules |
+	 emphclass_rule | decpoint_rule | hyphen_rule | 
+	 capsnocont_rule |
+	 translation_rules |
+	 miscellaneous_rules }
+
+COMMENT = _{ "#" ~ (!NEWLINE ~ ANY)* }
+WHITESPACE = _{ " " | "\t" | NEWLINE }
+
+table = _{ SOI ~ (!NEWLINE ~ rule)* ~ EOI }
