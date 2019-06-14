@@ -1,7 +1,10 @@
 dots = { (ASCII_NONZERO_DIGIT | "-")+ }
 
+unicode = @{ "\\" ~ "x" ~ ASCII_HEX_DIGIT{4} }
+character = _{ LETTER | unicode}
+
 // Character-Definition opcodes
-letter_rules = { ("space" | "digit" | "letter" | "punctuation" ) ~ LETTER ~ dots }
+letter_rules = { ("space" | "digit" | "letter" | "punctuation" ) ~ character ~ dots }
 
 uplow_chars = ${ UPPERCASE_LETTER ~ LOWERCASE_LETTER }
 uplow_rule = { "uplow" ~ uplow_chars ~ dots ~ ("," ~ dots)? }

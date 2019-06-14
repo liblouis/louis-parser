@@ -16,7 +16,7 @@ fn main() -> io::Result<()> {
     let mut f = File::open(path)?;
     let mut buffer = String::new();
     f.read_to_string(&mut buffer)?;
-    
+
     // let successful_parse = LOUISParser::parse(Rule::dots, "123");
     // println!("{:?}", successful_parse);
 
@@ -31,6 +31,9 @@ fn main() -> io::Result<()> {
 
     // let successful_parse = LOUISParser::parse(Rule::rule, "noback word foo 123-12");
     // println!("{:?}", successful_parse);
+
+    let successful_parse = LOUISParser::parse(Rule::rule, "letter \\x0981 123-12");
+    println!("{:?}", successful_parse);
 
     // let successful_parse = LOUISParser::parse(Rule::rule, "include foo.txt");
     // println!("{:?}", successful_parse);
