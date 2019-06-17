@@ -77,7 +77,7 @@ post_pattern = { pre_pattern}
 match_rule = { "match" ~ pre_pattern ~ (LETTER)+ ~ post_pattern ~ dots }
 
 // Miscellaneous Opcodes
-filename = { (ASCII_ALPHANUMERIC | "." | "-" | "_" )+ }
+filename = @{ (ASCII_ALPHANUMERIC | "." | "-" | "_" )+ }
 include_rule = { "include" ~ filename }
 undefined_rule = { "undefined" ~ dots }
 display_rule = { "display" ~ LETTER ~ dots }
