@@ -5,5 +5,5 @@ authors = ["Christian Egli <christian.egli@sbs.ch>"]
 edition = "2018"
 
 [dependencies]
-pest = "2.0"
-pest_derive = "2.0"
+pest = "2.1.1"
+pest_derive = "2.1.0"
