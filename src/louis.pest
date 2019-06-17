@@ -43,12 +43,12 @@ translation_opcodes = { "comp6" | "comp6" | "always" | "repeated" |
 		      	"endword" | "partword" |
 		      	"prepunc" | "postpunc" |
 		      	"begnum" | "midnum" | "endnum" | "joinnum" }
-translation_rule = { prefix? ~ translation_opcodes ~ (LETTER)+ ~ dots }
+translation_rule = { prefix? ~ translation_opcodes ~ character+ ~ dots }
 
 compbrl_rule = { prefix? ~ "compbrl" ~ (LETTER)+ }
 nocont_rule = { prefix? ~ "nocont" ~  (LETTER)+ }
 contraction_rule = { prefix? ~ "contraction" ~ (LETTER)+ }
-replace_rule = { prefix? ~ "replace" ~ (LETTER)+ ~ (LETTER)+ }
+replace_rule = { prefix? ~ "replace" ~ character+ ~ character* }
 exactdots_rule = { prefix? ~ "exactdots" ~ "@" ~ dots }
 translation_rules = { compbrl_rule | nocont_rule | replace_rule | contraction_rule | exactdots_rule |
 		      translation_rule}
