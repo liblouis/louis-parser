@@ -1,4 +1,4 @@
-dots = { (ASCII_NONZERO_DIGIT | "-")+ }
+dots = @{ ASCII_NONZERO_DIGIT ~ (ASCII_NONZERO_DIGIT | "-")* }
 
 unicode = @{ "\\" ~ "x" ~ ASCII_HEX_DIGIT{4} }
 character = _{ LETTER | unicode}
