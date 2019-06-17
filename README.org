@@ -17,6 +17,19 @@ Moving to Rust for solid memory management and to parser generator
 like pest would be of tremendeous help to avoid the buffer overflow
 problems.
 
+* Status
+At the moment this is nothing but an experiment, basically an extended
+afternoon hack. There is a non-complete syntax description without any
+code to handle the generated AST.
+
+Support for meatier bits of the liblouis syntax such as the test and
+action expressions in the multipart opcodes is missing. Implicit
+inline comments which are used in liblouis very often are also not
+supported.
+
+At the same time it is IMHO amazing how far you can get with very
+little code...
+
 * Prerequisites
 
 - You need the [[https://www.rust-lang.org/][Rust tool chain]].
