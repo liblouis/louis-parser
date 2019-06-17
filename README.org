@@ -1,0 +1,44 @@
+#+title: Experimental liblouis table parser
+
+An experiment at writing a liblouis table parser based on [[https://en.wikipedia.org/wiki/Parsing_expression_grammar][Parsing
+expression grammar]], [[https://pest.rs/][pest]] and Rust
+
+* Usage
+
+#+BEGIN_SRC shell
+cargo run ~/src/liblouis/tables/bengali.cti
+#+END_SRC
+
+* Rationale
+Many if not most of the CVEs of liblouis are rooted in the hand
+crafted parsing functions of liblouis.
+
+Moving to Rust for solid memory management and to parser generator
+like pest would be of tremendeous help to avoid the buffer overflow
+problems.
+
+* Prerequisites
+
+- You need the [[https://www.rust-lang.org/][Rust tool chain]].
+
+* contributing
+If you have any improvements or comments please feel free to file a
+pull request or an issue.
+
+* License
+
+Copyright (C) 2019 Swiss Library for the Blind, Visually Impaired and Print Disabled
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see
+<https://www.gnu.org/licenses/>.
