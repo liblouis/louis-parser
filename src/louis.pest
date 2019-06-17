@@ -10,7 +10,7 @@ uplow_chars = ${ UPPERCASE_LETTER ~ LOWERCASE_LETTER }
 uplow_rule = { "uplow" ~ uplow_chars ~ dots ~ ("," ~ dots)? }
 lowercase_rule = { "lowercase" ~ LOWERCASE_LETTER ~ dots }
 uppercase_rule = { "uppercase" ~ UPPERCASE_LETTER ~ dots }
-litdigit_rule = { "litdigit" ~ ASCII_DIGIT ~ dots }
+litdigit_rule = { "litdigit" ~ ( ASCII_DIGIT | unicode ) ~ dots }
 sign_rule = { "sign" ~ SYMBOL ~ dots }
 
 character_definition_rules = {letter_rules | uplow_rule |
