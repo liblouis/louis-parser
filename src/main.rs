@@ -26,13 +26,16 @@ fn main() -> io::Result<()> {
         println!("Text:    {}", pair.as_str());
 
         // A pair can be converted to an iterator of the tokens which make it up:
-        // for inner_pair in pair.into_inner() {
-        //     match inner_pair.as_rule() {
-        //         Rule::alpha => println!("Letter:  {}", inner_pair.as_str()),
-        //         Rule::digit => println!("Digit:   {}", inner_pair.as_str()),
-        //         _ => unreachable!()
-        //     };
-        // }
+        for inner_pair in pair.into_inner() {
+            println!("  Rule:    {:?}", inner_pair.as_rule());
+            println!("  Span:    {:?}", inner_pair.as_span());
+            println!("  Text:    {}", inner_pair.as_str());
+            // match inner_pair.as_rule() {
+            //     Rule::alpha => println!("Letter:  {}", inner_pair.as_str()),
+            //     Rule::digit => println!("Digit:   {}", inner_pair.as_str()),
+            //     _ => unreachable!()
+            // };
+        }
     }
 
     // let successful_parse = LOUISParser::parse(Rule::dots, "123");
