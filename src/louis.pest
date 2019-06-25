@@ -91,7 +91,7 @@ rule = { character_definition_rules |
 	 capsnocont_rule |
 	 compbrl_rule |
 	 nocont_rule |
-	 replace_2_args_rule |
+	 //replace_2_args_rule |
 	 replace_1_arg_rule |
 	 contraction_rule |
 	 exactdots_rule |
