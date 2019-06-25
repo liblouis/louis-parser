@@ -6,7 +6,26 @@ expression grammar]], [[https://pest.rs/][pest]] and Rust
 * Usage
 
 #+BEGIN_SRC shell
-cargo run ~/src/liblouis/tables/bengali.cti
+$ cargo run ~/src/liblouis/tables/bengali.cti
+  Rule:    miscellaneous_rules
+  Span:    Span { str: "include braille-patterns.cti", start: 1146, end: 1174 }
+  Text:    include braille-patterns.cti
+    Rule:    include_rule
+    Span:    Span { str: "include braille-patterns.cti", start: 1146, end: 1174 }
+    Text:    include braille-patterns.cti
+  Rule:    character_definition_rules
+  Span:    Span { str: "letter   \\x0981\t3", start: 1176, end: 1193 }
+  Text:    letter   \x0981	3
+    Rule:    letter_rules
+    Span:    Span { str: "letter   \\x0981\t3", start: 1176, end: 1193 }
+    Text:    letter   \x0981	3
+  Rule:    character_definition_rules
+  Span:    Span { str: "letter   \\x0982\t56", start: 1221, end: 1239 }
+  Text:    letter   \x0982	56
+    Rule:    letter_rules
+    Span:    Span { str: "letter   \\x0982\t56", start: 1221, end: 1239 }
+    Text:    letter   \x0982	56
+...
 #+END_SRC
 
 * Rationale
@@ -19,8 +38,8 @@ problems.
 
 * Status
 At the moment this is nothing but an experiment, basically an extended
-afternoon hack. There is a non-complete syntax description without any
-code to handle the generated AST.
+afternoon hack. There is a non-complete syntax description with code
+to print the generated AST.
 
 Support for meatier bits of the liblouis syntax such as the test and
 action expressions in the multipart opcodes is missing. Implicit
