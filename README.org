@@ -23,22 +23,6 @@ $ cargo run ~/src/liblouis/tables/bengali.cti
   Text:    "letter   \x0983	6"
     Rule:    letter_rules
     Text:    "letter   \x0983	6"
-  Rule:    character_definition_rules
-  Text:    "letter   \x0985	1"
-    Rule:    letter_rules
-    Text:    "letter   \x0985	1"
-  Rule:    character_definition_rules
-  Text:    "letter   \x0986	345"
-    Rule:    letter_rules
-    Text:    "letter   \x0986	345"
-  Rule:    character_definition_rules
-  Text:    "letter   \x0987	24"
-    Rule:    letter_rules
-    Text:    "letter   \x0987	24"
-  Rule:    character_definition_rules
-  Text:    "letter   \x0988	35"
-    Rule:    letter_rules
-    Text:    "letter   \x0988	35"
 ...
 #+END_SRC
 
