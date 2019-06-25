@@ -34,7 +34,9 @@ hyphen_rule = { "hyphen" ~ LETTER ~ dots }
 capsnocont_rule = { "capsnocont" }
 
 // Translation opcodes
-prefix = { "before" | "after" | "noback" | "nofor" }
+with_class = { ("before" | "after" ) ~ class_name }
+
+prefix = { "noback" | "nofor" }
 
 translation_opcodes = { "comp6" | "comp6" | "always" | "repeated" |
 		      	"repword" | "largesign" | "word" |
@@ -44,7 +46,7 @@ translation_opcodes = { "comp6" | "comp6" | "always" | "repeated" |
 		      	"endword" | "partword" |
 		      	"prepunc" | "postpunc" |
 		      	"begnum" | "midnum" | "endnum" | "joinnum" }
-translation_rule = { prefix? ~ translation_opcodes ~ characters ~ dots }
+translation_rule = { prefix? ~ with_class? ~ translation_opcodes ~ characters ~ dots }
 
 compbrl_rule = { prefix? ~ "compbrl" ~ characters }
 nocont_rule = { prefix? ~ "nocont" ~  characters }
