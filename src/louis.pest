@@ -52,8 +52,6 @@ contraction_rule = { prefix? ~ "contraction" ~ characters }
 replace_2_args_rule = { prefix? ~ "replace" ~ characters ~ characters }
 replace_1_arg_rule = { prefix? ~ "replace" ~ characters }
 exactdots_rule = { prefix? ~ "exactdots" ~ "@" ~ dots }
-translation_rules = { compbrl_rule | nocont_rule | replace_rule | contraction_rule | exactdots_rule |
-		      translation_rule}
 
 // Character class opcodes
 class_name = ${ ASCII_ALPHANUMERIC+ }
@@ -91,7 +89,13 @@ rule = { character_definition_rules |
        	 braille_indicator_rules |
 	 emphclass_rule | decpoint_rule | hyphen_rule | 
 	 capsnocont_rule |
-	 translation_rules |
+	 compbrl_rule |
+	 nocont_rule |
+	 replace_2_args_rule |
+	 replace_1_arg_rule |
+	 contraction_rule |
+	 exactdots_rule |
+	 translation_rule |
 	 class_rule |
 	 miscellaneous_rules }
 
