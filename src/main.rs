@@ -50,14 +50,8 @@ fn main() -> io::Result<()> {
     // let successful_parse = LOUISParser::parse(Rule::rule, "noback word foo 123-12");
     // println!("{:?}", successful_parse);
 
-    let successful_parse = LOUISParser::parse(Rule::rule, "letter \\x0981 123-12");
-    println!("{:?}", successful_parse);
-
-    // let successful_parse = LOUISParser::parse(Rule::rule, "include foo.txt");
-    // println!("{:?}", successful_parse);
-
-    let unsuccessful_parse = LOUISParser::parse(Rule::table, &buffer);
-    println!("{:?}", unsuccessful_parse);
+    // let unsuccessful_parse = LOUISParser::parse(Rule::table, &buffer);
+    // println!("{:?}", unsuccessful_parse);
 
     Ok(())
 }
