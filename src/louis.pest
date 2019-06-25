@@ -2,6 +2,7 @@ dots = @{ ASCII_NONZERO_DIGIT ~ (ASCII_NONZERO_DIGIT | "-")* }
 
 unicode = @{ "\\" ~ "x" ~ ASCII_HEX_DIGIT{4} }
 character = _{ LETTER | unicode}
+characters = ${ character+ }
 
 // Character-Definition opcodes
 letter_rules = { ("space" | "digit" | "letter" | "punctuation" ) ~ character ~ dots }
@@ -18,12 +19,12 @@ character_definition_rules = {letter_rules | uplow_rule |
 
 // Braille Indicator opcodes
 indicatorsign_rules = { ( "capsletter" | "begcapsword" | "endcapsword" | "begcaps" | "endcaps" | "letsign" | "nocontractsign" | "numsign")  ~ dots }
-noindicator_rules = { ("noletsign" | "noletsignbefore" | "numericnocontchars" | "numericmodechars" | "midendnumericmodechars" ) ~ (LETTER)+ }
+noindicator_rules = { ("noletsign" | "noletsignbefore" | "numericnocontchars" | "numericmodechars" | "midendnumericmodechars" ) ~ characters }
 capsmodechars_rule = { "capsmodechars" ~ (LETTER | PUNCTUATION)+ }
 braille_indicator_rules = { indicatorsign_rules | noindicator_rules | capsmodechars_rule}
 
 // Emphasis opcodes
-emphclass_rule = { "emphclass" ~ (LETTER)+ }
+emphclass_rule = { "emphclass" ~ characters }
 
 // Special Symbol opcodes
 decpoint_rule = { "decpoint" ~ PUNCTUATION ~ dots }
@@ -43,12 +44,12 @@ translation_opcodes = { "comp6" | "comp6" | "always" | "repeated" |
 		      	"endword" | "partword" |
 		      	"prepunc" | "postpunc" |
 		      	"begnum" | "midnum" | "endnum" | "joinnum" }
-translation_rule = { prefix? ~ translation_opcodes ~ character+ ~ dots }
-
-compbrl_rule = { prefix? ~ "compbrl" ~ (LETTER)+ }
-nocont_rule = { prefix? ~ "nocont" ~  (LETTER)+ }
-contraction_rule = { prefix? ~ "contraction" ~ (LETTER)+ }
 replace_rule = { prefix? ~ "replace" ~ character+ ~ character* }
+translation_rule = { prefix? ~ translation_opcodes ~ characters ~ dots }
+
+compbrl_rule = { prefix? ~ "compbrl" ~ characters }
+nocont_rule = { prefix? ~ "nocont" ~  characters }
+contraction_rule = { prefix? ~ "contraction" ~ characters }
 exactdots_rule = { prefix? ~ "exactdots" ~ "@" ~ dots }
 translation_rules = { compbrl_rule | nocont_rule | replace_rule | contraction_rule | exactdots_rule |
 		      translation_rule}
