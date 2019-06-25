@@ -49,9 +49,8 @@ translation_rule = { prefix? ~ translation_opcodes ~ characters ~ dots }
 compbrl_rule = { prefix? ~ "compbrl" ~ characters }
 nocont_rule = { prefix? ~ "nocont" ~  characters }
 contraction_rule = { prefix? ~ "contraction" ~ characters }
-replace_rule = { prefix? ~ "replace" ~ characters }
-// FIXME: the following would be the correct grammar, but it is too greedy, i.e. it eats beyond the newline
-//replace_rule = { prefix? ~ "replace" ~ characters ~ characters? }
+replace_2_args_rule = { prefix? ~ "replace" ~ characters ~ characters }
+replace_1_arg_rule = { prefix? ~ "replace" ~ characters }
 exactdots_rule = { prefix? ~ "exactdots" ~ "@" ~ dots }
 translation_rules = { compbrl_rule | nocont_rule | replace_rule | contraction_rule | exactdots_rule |
 		      translation_rule}
