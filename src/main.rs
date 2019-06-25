@@ -23,13 +23,13 @@ fn main() -> io::Result<()> {
         // A pair can be converted to an iterator of the tokens which make it up:
         for inner_pair in pair.into_inner() {
             println!("  Rule:    {:?}", inner_pair.as_rule());
-            println!("  Span:    {:?}", inner_pair.as_span());
-            println!("  Text:    {}", inner_pair.as_str());
+            //println!("  Span:    {:?}", inner_pair.as_span());
+            println!("  Text:    \"{}\"", inner_pair.as_str());
 
             for parts in inner_pair.into_inner() {
                 println!("    Rule:    {:?}", parts.as_rule());
-                println!("    Span:    {:?}", parts.as_span());
-                println!("    Text:    {}", parts.as_str());
+                // println!("    Span:    {:?}", parts.as_span());
+                println!("    Text:    \"{}\"", parts.as_str());
             }
             // match inner_pair.as_rule() {
             //     Rule::alpha => println!("Letter:  {}", inner_pair.as_str()),
