@@ -20,16 +20,17 @@ fn main() -> io::Result<()> {
     let pairs = LOUISParser::parse(Rule::table, &buffer).unwrap_or_else(|e| panic!("{}", e));
 
     for pair in pairs {
-        // A pair is a combination of the rule which matched and a span of input
-        println!("Rule:    {:?}", pair.as_rule());
-        println!("Span:    {:?}", pair.as_span());
-        println!("Text:    {}", pair.as_str());
-
         // A pair can be converted to an iterator of the tokens which make it up:
         for inner_pair in pair.into_inner() {
             println!("  Rule:    {:?}", inner_pair.as_rule());
             println!("  Span:    {:?}", inner_pair.as_span());
             println!("  Text:    {}", inner_pair.as_str());
+
+            for parts in inner_pair.into_inner() {
+                println!("    Rule:    {:?}", parts.as_rule());
+                println!("    Span:    {:?}", parts.as_span());
+                println!("    Text:    {}", parts.as_str());
+            }
             // match inner_pair.as_rule() {
             //     Rule::alpha => println!("Letter:  {}", inner_pair.as_str()),
             //     Rule::digit => println!("Digit:   {}", inner_pair.as_str()),
