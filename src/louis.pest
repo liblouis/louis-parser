@@ -115,7 +115,7 @@ rule = _{
 space = { "space" ~ unicode_characters ~ dots_with_zero ~ end_comment?}
 punctuation = { "punctuation" ~ unicode_characters ~ dots ~ end_comment?}
 digit = { "digit" ~ unicode_characters ~ dots ~ end_comment?}
-uplow = { "uplow" ~ unicode_characters ~ dots ~ ("," ~ dots)? ~ end_comment?}
+uplow = { prefix? ~ "uplow" ~ unicode_characters ~ dots ~ ("," ~ dots)? ~ end_comment?}
 grouping = { "grouping" ~ ASCII_ALPHA+ ~ unicode_character{2}~ dots ~ "," ~ dots ~ end_comment?}
 letter = { "letter" ~ unicode_characters ~ dots ~ end_comment?}
 lowercase = { prefix? ~ "lowercase" ~ unicode_character ~ dots ~ end_comment?}
@@ -185,12 +185,11 @@ midendword = { prefix? ~ "midendword" ~ unicode_characters ~ dots ~ end_comment?
 endword = { "endword" ~ unicode_characters ~ dots ~ end_comment?}
 partword = { "partword" ~ unicode_characters ~ dots ~ end_comment?}
 //exactdots = { "exactdots" ~ "@" ~ dots ~ end_comment?}
-prepunc = { "prepunc" ~ unicode_characters ~ dots ~ end_comment?}
-postpunc = { "postpunc" ~ unicode_characters ~ dots ~ end_comment?}
+prepunc = { prefix? ~ "prepunc" ~ unicode_characters ~ dots ~ end_comment?}
+postpunc = { prefix? ~ "postpunc" ~ unicode_characters ~ dots ~ end_comment?}
 midnum = { "midnum" ~ unicode_characters ~ dots ~ end_comment?}
 endnum = { "endnum" ~ unicode_characters ~ dots ~ end_comment?}
 joinnum = { "joinnum" ~ unicode_characters ~ dots ~ end_comment?}
-
 
 // Character-Class Opcodes	    
 attribute = { "attribute" ~ (ascii_characters | ASCII_OCT_DIGIT ) ~ unicode_characters ~ end_comment?}
