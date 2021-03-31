@@ -3,59 +3,130 @@ extern crate pest;
 extern crate pest_derive;
 
 use std::io;
-use std::io::prelude::*;
-use std::fs::File;
+use std::fs;
 use pest::Parser;
 
 #[derive(Parser)]
 #[grammar = "louis.pest"]
-pub struct LOUISParser;
+pub struct LouisParser;
 
 fn main() -> io::Result<()> {
     let path = std::env::args().nth(1).expect("no path given");
-    let mut f = File::open(path)?;
-    let mut buffer = String::new();
-    f.read_to_string(&mut buffer)?;
 
-    let pairs = LOUISParser::parse(Rule::table, &buffer).unwrap_or_else(|e| panic!("{}", e));
+    let unparsed_file = fs::read_to_string(path).expect("cannot read file");
+    let file = LouisParser::parse(Rule::table, &unparsed_file)
+	.expect("unsuccessful parse")
+	.next().unwrap();
 
-    for pair in pairs {
-        // A pair can be converted to an iterator of the tokens which make it up:
-        for inner_pair in pair.into_inner() {
-            println!("  Rule:    {:?}", inner_pair.as_rule());
-            //println!("  Span:    {:?}", inner_pair.as_span());
-            println!("  Text:    \"{}\"", inner_pair.as_str());
+    for rule in file.into_inner() {
+	match rule.as_rule() {
+	    // Miscellaneous Opcodes
+	    Rule::include => (),
+	    Rule::undefined => (),
+	    Rule::display => (),
+	    Rule::multind => (),
+	    // Character-Definition Opcodes
+	    Rule::space => (),
+	    Rule::punctuation => (),
+	    Rule::digit => (),
+	    Rule::grouping => (),
+	    Rule::uplow => (),
+	    Rule::letter => (),
+	    Rule::lowercase => (),
+	    Rule::uppercase => (),
+	    Rule::sign => (),
+	    Rule::math => (),
+	    // Braille Indicator Opcodes
+	    Rule::capsletter => (),
+	    Rule::begcapsword => (),
+	    Rule::endcapsword => (),
+	    Rule::capsmodechars => (),
+	    Rule::begcaps => (),
+	    Rule::endcaps => (),
+	    Rule::begcapsphrase => (),
+	    Rule::endcapsphrase => (),
+	    Rule::lencapsphrase => (),
+	    Rule::letsign => (),
+	    Rule::noletsign => (),
+	    Rule::noletsignbefore => (),
+	    Rule::noletsignafter => (),
+	    Rule::nocontractsign => (),
+	    Rule::numsign => (),
+	    Rule::numericnocontchars => (),
+	    Rule::numericmodechars => (),
+	    Rule::midendnumericmodechars => (),
+	    // Opcodes for Standing Alone Sequences
+	    // Emphasis Opcodes
+	    Rule::emphclass => (),
+	    Rule::begemph => (),
+	    Rule::endemph => (),
+	    Rule::noemphchars => (),
+	    Rule::emphletter => (),
+	    Rule::begemphword => (),
+	    Rule::endemphword => (),
+	    Rule::emphmodechars => (),
+	    Rule::begemphphrase => (),
+	    Rule::endemphphrase => (),
+	    Rule::lenemphphrase => (),
+	    // Computer braille
+	    // Special Symbol Opcodes
+	    Rule::decpoint => (),
+	    Rule::hyphen => (),
+	    // Special Processing Opcodes
+	    Rule::capsnocont => (),
+	    // Translation Opcodes
+	    Rule::compbrl => (),
+	    Rule::comp6 => (),
+	    Rule::nocont => (),
+	    Rule::replace => (),
+	    Rule::always => (),
+	    Rule::repeated => (),
+	    Rule::repword => (),
+	    Rule::rependword => (),
+	    Rule::largesign => (),
+	    Rule::word => (),
+	    Rule::syllable => (),
+	    Rule::joinword => (),
+	    Rule::lowword => (),
+	    Rule::contraction => (),
+	    Rule::sufword => (),
+	    Rule::prfword => (),
+	    Rule::begword => (),
+	    Rule::begmidword => (),
+	    Rule::midword => (),
+	    Rule::midendword => (),
+	    Rule::endword => (),
+	    Rule::partword => (),
+	    Rule::prepunc => (),
+	    Rule::postpunc => (),
+	    Rule::midnum => (),
+	    Rule::endnum => (),
+	    Rule::joinnum => (),
+	    // Character-Class Opcodes
+	    Rule::attribute => (),
+	    // Swap Opcodes
+	    Rule::swapcd => (),
+	    Rule::swapdd => (),
+	    Rule::swapcc => (),
+	    // Context and Multipass Opcodes
+	    Rule::context => (),
+	    Rule::pass2 => (),
+	    Rule::pass3 => (),
+	    Rule::pass4 => (),
+	    // The correct Opcode
+	    Rule::correct => (),
+	    // The match Opcode
+	    Rule::match_rule => (),
+	    Rule::pre_pattern => (),
+	    Rule::post_pattern => (),
 
-            for parts in inner_pair.into_inner() {
-                println!("    Rule:    {:?}", parts.as_rule());
-                // println!("    Span:    {:?}", parts.as_span());
-                println!("    Text:    \"{}\"", parts.as_str());
-            }
-            // match inner_pair.as_rule() {
-            //     Rule::alpha => println!("Letter:  {}", inner_pair.as_str()),
-            //     Rule::digit => println!("Digit:   {}", inner_pair.as_str()),
-            //     _ => unreachable!()
-            // };
-        }
+	    Rule::EOI => (),
+	    Rule::unknown_rule => {
+		println!("{:?}, {:?}", rule.as_rule(), rule.as_str());
+	    }
+	    _ => unreachable!(),
+	}
     }
-
-    // let successful_parse = LOUISParser::parse(Rule::dots, "123");
-    // println!("{:?}", successful_parse);
-
-    // let successful_parse = LOUISParser::parse(Rule::comment, "# word foo 123-12");
-    // println!("{:?}", successful_parse);
-
-    // let successful_parse = LOUISParser::parse(Rule::comment, "# a little test");
-    // println!("{:?}", successful_parse);
-
-   // let successful_parse = LOUISParser::parse(Rule::rule, "word foo 123-12");
-    // println!("{:?}", successful_parse);
-
-    // let successful_parse = LOUISParser::parse(Rule::rule, "noback word foo 123-12");
-    // println!("{:?}", successful_parse);
-
-    // let unsuccessful_parse = LOUISParser::parse(Rule::table, &buffer);
-    // println!("{:?}", unsuccessful_parse);
 
     Ok(())
 }
