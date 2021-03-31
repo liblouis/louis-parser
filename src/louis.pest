@@ -234,10 +234,12 @@ dots_with_zero = @{ dot_with_zero ~ (dot_with_zero | "-")* }
 ascii_characters = @{ ASCII_ALPHANUMERIC+ }
 file_characters = @{ (ASCII_ALPHANUMERIC | "." | "_" | "-" | "/")+ }
 unicode_characters = @{ unicode_character+ }
-unicode_character = { LETTER | NUMBER | PUNCTUATION | SYMBOL | hex_char }
+unicode_character = { LETTER | NUMBER | PUNCTUATION | SYMBOL | hex_char | escape_sequence}
 
 characters = @{ char+ }
 char = { ASCII_ALPHANUMERIC | "." | "_" | "-" | "/" | "`" | "&" | "$" | "@" | hex_char}
+
+escape_sequence = { "\\f" | "\\n" | "\\r" | "\\s" | "\\t" | "\\v" | "\\e"}
 
 hex_char = { "\\" ~ "x" ~ ASCII_HEX_DIGIT{4} }
 
