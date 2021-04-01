@@ -227,10 +227,10 @@ unknown_rule = { (!NEWLINE ~ ANY)+ }
 prefix = { "noback" | "nofor" | "nocross" }
 
 dot = { ASCII_NONZERO_DIGIT | 'a'..'f' }
-dots = @{ "=" | dot ~ (dot | "-")* }
+dots = @{ "=" | dot+ ~ ("-" ~ dot+)*}
 
 dot_with_zero = { ASCII_DIGIT | 'a'..'f' }
-dots_with_zero = @{ dot_with_zero ~ (dot_with_zero | "-")* }
+dots_with_zero = @{ dot_with_zero+ ~ ("-" ~ dot_with_zero+)* }
 
 ascii_characters = @{ ASCII_ALPHANUMERIC+ }
 file_characters = @{ (ASCII_ALPHANUMERIC | "." | "_" | "-" | "/")+ }
