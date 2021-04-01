@@ -125,9 +125,9 @@ litdigit = { "litdigit" ~ unicode_character ~ dots ~ end_comment?}
 sign = { "sign" ~ unicode_character ~ dots_with_zero ~ end_comment?}
 math = { "math" ~ unicode_character ~ dots ~ end_comment?}
 //Braille Indicator Opcodes
-capsletter = { "capsletter" ~ dots }
 begcapsword = { "begcapsword" ~ dots }
 endcapsword = { "endcapsword" ~ dots }
+capsletter = { "capsletter" ~ dots ~ end_comment?}
 capsmodechars = { "capsmodechars" ~ unicode_characters }
 begcaps = { "begcaps" ~ dots}
 endcaps = { "endcaps" ~ dots}
@@ -158,8 +158,8 @@ endemphphrase = { "endemphphrase" ~ ascii_characters ~ ("before" | "after") ~ do
 lenemphphrase = { "lenemphphrase" ~ ascii_characters ~ ASCII_DIGIT }
 // Computer braille
 // Special Symbol Opcodes
-decpoint = { "decpoint" ~ unicode_characters ~ dots}
-hyphen = { "hyphen" ~ unicode_characters ~ dots}
+decpoint = { "decpoint" ~ unicode_characters ~ dots ~ end_comment?}
+hyphen = { "hyphen" ~ unicode_characters ~ dots ~ end_comment?}
 // Special Processing Opcodes
 capsnocont = { "capsnocont"}
 // Translation Opcodes
@@ -171,7 +171,7 @@ always = { prefix? ~ "always" ~ unicode_characters ~ dots ~ end_comment? }
 repeated = { "repeated" ~ unicode_characters ~ dots}
 repword = { "repword" ~ unicode_characters ~ dots}
 rependword = { "rependword" ~ unicode_characters ~ dots ~ "," ~ dots}
-largesign = { "largesign" ~ unicode_characters ~ dots }
+largesign = { "largesign" ~ unicode_characters ~ dots ~ end_comment?}
 word = { prefix? ~ "word" ~ unicode_characters ~ dots ~ end_comment?}
 syllable = { "syllable" ~ unicode_characters ~ dots}
 joinword = { "joinword" ~ unicode_characters ~ dots ~ end_comment?}
@@ -183,7 +183,7 @@ begword = { prefix? ~ "begword" ~ unicode_characters ~ dots ~ end_comment?}
 begmidword = { prefix? ~ "begmidword" ~ unicode_characters ~ dots ~ end_comment?}
 midword = { prefix? ~ "midword" ~ unicode_characters ~ dots ~ end_comment?}
 midendword = { prefix? ~ "midendword" ~ unicode_characters ~ dots ~ end_comment?}
-endword = { "endword" ~ unicode_characters ~ dots ~ end_comment?}
+endword = { prefix? ~ "endword" ~ unicode_characters ~ dots ~ end_comment?}
 partword = { "partword" ~ unicode_characters ~ dots ~ end_comment?}
 //exactdots = { "exactdots" ~ "@" ~ dots ~ end_comment?}
 prepunc = { prefix? ~ "prepunc" ~ unicode_characters ~ dots ~ end_comment?}
@@ -218,7 +218,7 @@ post_pattern = { characters } // FIXME
 
 // Miscellaneous Opcodes
 include = { "include" ~ file_characters ~ end_comment? }
-undefined = { "undefined" ~ dots}
+undefined = { "undefined" ~ dots ~ end_comment?}
 display = { "display" ~ unicode_characters ~ dots_with_zero ~ end_comment?}
 multind = { "multind" ~ dots ~ ascii_characters+ }
 
