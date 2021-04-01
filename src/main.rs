@@ -98,6 +98,7 @@ fn main() -> io::Result<()> {
 		    Rule::partword => (),
 		    Rule::prepunc => (),
 		    Rule::postpunc => (),
+		    Rule::begnum => (),
 		    Rule::midnum => (),
 		    Rule::endnum => (),
 		    Rule::joinnum => (),

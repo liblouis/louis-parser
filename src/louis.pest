@@ -88,6 +88,7 @@ rule = _{
     //exactdots |
     prepunc |
     postpunc |
+    begnum |
     midnum |
     endnum |
     joinnum |
@@ -187,6 +188,7 @@ partword = { "partword" ~ unicode_characters ~ dots ~ end_comment?}
 //exactdots = { "exactdots" ~ "@" ~ dots ~ end_comment?}
 prepunc = { prefix? ~ "prepunc" ~ unicode_characters ~ dots ~ end_comment?}
 postpunc = { prefix? ~ "postpunc" ~ unicode_characters ~ dots ~ end_comment?}
+begnum = { "begnum" ~ unicode_characters ~ dots ~ end_comment?}
 midnum = { "midnum" ~ unicode_characters ~ dots ~ end_comment?}
 endnum = { "endnum" ~ unicode_characters ~ dots ~ end_comment?}
 joinnum = { "joinnum" ~ unicode_characters ~ dots ~ end_comment?}
