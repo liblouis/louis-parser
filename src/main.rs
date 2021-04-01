@@ -28,11 +28,12 @@ fn main() -> io::Result<()> {
 		    Rule::space => (),
 		    Rule::punctuation => (),
 		    Rule::digit => (),
-		    Rule::grouping => (),
 		    Rule::uplow => (),
+		    Rule::grouping => (),
 		    Rule::letter => (),
 		    Rule::lowercase => (),
 		    Rule::uppercase => (),
+		    Rule::litdigit => (),
 		    Rule::sign => (),
 		    Rule::math => (),
 		    // Braille Indicator Opcodes
