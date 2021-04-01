@@ -240,7 +240,7 @@ unicode_character = { hex_char | escape_sequence | LETTER | NUMBER | PUNCTUATION
 characters = @{ char+ }
 char = { ASCII_ALPHANUMERIC | "." | "_" | "-" | "/" | "`" | "&" | "$" | "@" | hex_char}
 
-escape_sequence = { "\\f" | "\\n" | "\\r" | "\\s" | "\\t" | "\\v" | "\\e"}
+escape_sequence = { "\\\\" | "\\f" | "\\n" | "\\r" | "\\s" | "\\t" | "\\v" | "\\e"}
 
 hex_char = { "\\" ~ "x" ~ ASCII_HEX_DIGIT{4} }
 
