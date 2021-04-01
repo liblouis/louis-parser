@@ -216,6 +216,10 @@ mod tests {
 	assert_ok!(LouisParser::parse(Rule::sign, r"sign \x00b0 56-45-245"));
     }
 
+    #[test]
+    fn punctuation() {
+	assert_ok!(LouisParser::parse(Rule::punctuation, r"punctuation \x00a0 0		NO-BREAK SPACE"));
+    }
 }
 
 

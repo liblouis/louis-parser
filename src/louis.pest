@@ -114,7 +114,7 @@ rule = _{
 
 // Character-Definition Opcodes
 space = { prefix? ~ "space" ~ unicode_characters ~ dots_with_zero ~ end_comment?}
-punctuation = { prefix? ~ "punctuation" ~ unicode_characters ~ dots ~ end_comment?}
+punctuation = { prefix? ~ "punctuation" ~ unicode_characters ~ dots_with_zero ~ end_comment?}
 digit = { "digit" ~ unicode_characters ~ dots ~ end_comment?}
 uplow = { prefix? ~ "uplow" ~ unicode_characters ~ dots ~ ("," ~ dots)? ~ end_comment?}
 grouping = { "grouping" ~ ASCII_ALPHA+ ~ unicode_character{2}~ dots ~ "," ~ dots ~ end_comment?}
