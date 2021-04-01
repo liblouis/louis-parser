@@ -46,8 +46,6 @@ rule = _{
     // Opcodes for Standing Alone Sequences
     // Emphasis Opcodes
     emphclass |
-    begemph |
-    endemph |
     noemphchars |
     emphletter |
     begemphword |
@@ -56,6 +54,8 @@ rule = _{
     begemphphrase |
     endemphphrase |
     lenemphphrase |
+    begemph |
+    endemph |
     // Computer braille
     // Special Symbol Opcodes
     decpoint |
