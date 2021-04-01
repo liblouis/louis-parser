@@ -235,7 +235,7 @@ dots_with_zero = @{ dot_with_zero+ ~ ("-" ~ dot_with_zero+)* }
 ascii_characters = @{ ASCII_ALPHANUMERIC+ }
 file_characters = @{ (ASCII_ALPHANUMERIC | "." | "_" | "-" | "/")+ }
 unicode_characters = @{ unicode_character+ }
-unicode_character = { hex_char | escape_sequence | LETTER | NUMBER | PUNCTUATION | SYMBOL }
+unicode_character = { hex_char | escape_sequence | LETTER | NUMBER | PUNCTUATION | SYMBOL | MARK | "­"}
 
 characters = @{ char+ }
 char = { ASCII_ALPHANUMERIC | "." | "_" | "-" | "/" | "`" | "&" | "$" | "@" | hex_char}
