@@ -218,7 +218,7 @@ post_pattern = { characters } // FIXME
 
 // Miscellaneous Opcodes
 include = { "include" ~ file_characters ~ end_comment? }
-undefined = { "undefined" ~ dots ~ end_comment?}
+undefined = { "undefined" ~ dots_with_zero ~ end_comment?}
 display = { "display" ~ unicode_characters ~ dots_with_zero ~ end_comment?}
 multind = { "multind" ~ dots ~ ascii_characters+ }
 
