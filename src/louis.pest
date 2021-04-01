@@ -85,7 +85,7 @@ rule = _{
     midendword |
     endword |
     partword |
-    //exactdots | 
+    //exactdots |
     prepunc |
     postpunc |
     midnum |
@@ -108,7 +108,7 @@ rule = _{
     match_rule |
     pre_pattern |
     post_pattern |
-    
+
     unknown_rule }
 
 // Character-Definition Opcodes
@@ -191,7 +191,7 @@ midnum = { "midnum" ~ unicode_characters ~ dots ~ end_comment?}
 endnum = { "endnum" ~ unicode_characters ~ dots ~ end_comment?}
 joinnum = { "joinnum" ~ unicode_characters ~ dots ~ end_comment?}
 
-// Character-Class Opcodes	    
+// Character-Class Opcodes
 attribute = { "attribute" ~ (ascii_characters | ASCII_OCT_DIGIT ) ~ unicode_characters ~ end_comment?}
 // Swap Opcodes
 swapcd = { "swapcd" ~ ascii_characters ~ dots ~ ("," ~ dots)* }
