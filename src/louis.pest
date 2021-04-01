@@ -113,21 +113,21 @@ rule = _{
     unknown_rule }
 
 // Character-Definition Opcodes
-space = { "space" ~ unicode_characters ~ dots_with_zero ~ end_comment?}
-punctuation = { "punctuation" ~ unicode_characters ~ dots ~ end_comment?}
+space = { prefix? ~ "space" ~ unicode_characters ~ dots_with_zero ~ end_comment?}
+punctuation = { prefix? ~ "punctuation" ~ unicode_characters ~ dots ~ end_comment?}
 digit = { "digit" ~ unicode_characters ~ dots ~ end_comment?}
 uplow = { prefix? ~ "uplow" ~ unicode_characters ~ dots ~ ("," ~ dots)? ~ end_comment?}
 grouping = { "grouping" ~ ASCII_ALPHA+ ~ unicode_character{2}~ dots ~ "," ~ dots ~ end_comment?}
-letter = { "letter" ~ unicode_characters ~ dots ~ end_comment?}
+letter = { prefix? ~ "letter" ~ unicode_characters ~ dots ~ end_comment?}
 lowercase = { prefix? ~ "lowercase" ~ unicode_character ~ dots ~ end_comment?}
 uppercase = { prefix? ~ "uppercase" ~ unicode_character ~ dots ~ end_comment?}
 litdigit = { "litdigit" ~ unicode_character ~ dots ~ end_comment?}
-sign = { "sign" ~ unicode_character ~ dots_with_zero ~ end_comment?}
-math = { "math" ~ unicode_character ~ dots ~ end_comment?}
+sign = { prefix? ~ "sign" ~ unicode_character ~ dots_with_zero ~ end_comment?}
+math = { prefix? ~ "math" ~ unicode_character ~ dots ~ end_comment?}
 //Braille Indicator Opcodes
-begcapsword = { "begcapsword" ~ dots }
-endcapsword = { "endcapsword" ~ dots }
 capsletter = { "capsletter" ~ dots ~ end_comment?}
+begcapsword = { prefix? ~ "begcapsword" ~ dots  ~ end_comment?}
+endcapsword = { prefix? ~ "endcapsword" ~ dots  ~ end_comment?}
 capsmodechars = { "capsmodechars" ~ unicode_characters }
 begcaps = { "begcaps" ~ dots}
 endcaps = { "endcaps" ~ dots}
@@ -147,7 +147,7 @@ midendnumericmodechars = { "midendnumericmodechars" ~ unicode_characters}
 // Emphasis Opcodes
 emphclass = { "emphclass" ~ ascii_characters }
 begemph = { "begemph" ~ ascii_characters ~ dots }
-endemph = { "endemph" ~ ascii_characters ~ dots }
+endemph = { prefix? ~ "endemph" ~ ascii_characters ~ dots }
 noemphchars = { "noemphchars" ~ ascii_characters ~ unicode_characters}
 emphletter = { "emphletter" ~ ascii_characters ~ dots }
 begemphword = { "begemphword" ~ ascii_characters ~ dots }
@@ -168,7 +168,7 @@ comp6 = { "comp6" ~ unicode_characters ~ dots}
 nocont = { "nocont" ~ unicode_characters}
 replace = { "replace" ~ unicode_characters ~ unicode_characters? ~ end_comment?}
 always = { prefix? ~ "always" ~ unicode_characters ~ dots ~ end_comment? }
-repeated = { "repeated" ~ unicode_characters ~ dots}
+repeated = { prefix? ~ "repeated" ~ unicode_characters ~ dots ~ end_comment? }
 repword = { "repword" ~ unicode_characters ~ dots}
 rependword = { "rependword" ~ unicode_characters ~ dots ~ "," ~ dots}
 largesign = { "largesign" ~ unicode_characters ~ dots ~ end_comment?}
