@@ -135,3 +135,87 @@ fn main() -> io::Result<()> {
 
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use claim::{assert_ok, assert_err};
+
+    #[test]
+    fn dot() {
+	assert_ok!(LouisParser::parse(Rule::dot, "1"));
+    }
+
+    #[test]
+    fn virtual_dot() {
+	assert_ok!(LouisParser::parse(Rule::dot, "a"));
+    }
+
+    #[test]
+    fn dot_faulty() {
+	assert_err!(LouisParser::parse(Rule::dot, "z"));
+    }
+
+    #[test]
+    fn dot_zero() {
+	assert_err!(LouisParser::parse(Rule::dot, "0"));
+    }
+
+    #[test]
+    fn dots() {
+	assert_ok!(LouisParser::parse(Rule::dots, "56-45-245"));
+    }
+
+    #[test]
+    fn dots_with_chars() {
+	assert_err!(LouisParser::parse(Rule::dots, "56-45-245zzzzz"), "Dots should not contain any characters other that 1-9 and a-f");
+    }
+
+    #[test]
+    fn dots_with_chars_2() {
+	assert_err!(LouisParser::parse(Rule::dots, "56-45-zzzzz-245"), "Dots should not contain any characters other that 1-9 and a-f");
+    }
+
+    #[test]
+    fn dots_with_chars_3() {
+	assert_err!(LouisParser::parse(Rule::dots, "zzz-56-45-245"), "Dots should not contain any characters other that 1-9 and a-f");
+    }
+
+    #[test]
+    fn dots_with_doubledash() {
+	assert_err!(LouisParser::parse(Rule::dots, "56-45--245"), "Dots should not contain double dashes");
+    }
+
+    #[test]
+    fn dots_starting_with_dash() {
+	assert_err!(LouisParser::parse(Rule::dots, "-56-45-245"), "Dots shouldn't start with a dash");
+    }
+
+    #[test]
+    fn hex_char() {
+	assert_ok!(LouisParser::parse(Rule::hex_char, r"\x00b0"));
+    }
+
+    #[test]
+    fn hex_char_faulty() {
+	assert_err!(LouisParser::parse(Rule::hex_char, r"\x00z0"));
+    }
+
+    #[test]
+    fn unicode_character() {
+	assert_ok!(LouisParser::parse(Rule::unicode_character, r"\x00b0"));
+    }
+
+    #[test]
+    fn sign() {
+	assert_ok!(LouisParser::parse(Rule::sign, "sign a 56-45-245"));
+    }
+
+    #[test]
+    fn sign_with_escaped_unicode() {
+	assert_ok!(LouisParser::parse(Rule::sign, r"sign \x00b0 56-45-245"));
+    }
+
+}
+
+
