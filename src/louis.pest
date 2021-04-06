@@ -1,10 +1,12 @@
 table = {
       SOI ~
-      ((comment | rule)? ~ NEWLINE)* ~
+      ((comment | rule_with_comment)? ~ NEWLINE)* ~
       EOI
 }
 
 comment = _{ "#" ~ (!NEWLINE ~ ANY)* }
+
+rule_with_comment = _{ rule ~ end_comment? }
 
 rule = _{
     // Miscellaneous Opcodes
@@ -113,21 +115,21 @@ rule = _{
     unknown_rule }
 
 // Character-Definition Opcodes
-space = { prefix? ~ "space" ~ unicode_characters ~ dots_with_zero ~ end_comment?}
-punctuation = { prefix? ~ "punctuation" ~ unicode_characters ~ dots_with_zero ~ end_comment?}
-digit = { "digit" ~ unicode_characters ~ dots ~ end_comment?}
-uplow = { prefix? ~ "uplow" ~ unicode_characters ~ dots ~ ("," ~ dots)? ~ end_comment?}
-grouping = { "grouping" ~ ASCII_ALPHA+ ~ unicode_character{2}~ dots ~ "," ~ dots ~ end_comment?}
-letter = { prefix? ~ "letter" ~ unicode_characters ~ dots_with_zero ~ end_comment?}
-lowercase = { prefix? ~ "lowercase" ~ unicode_character ~ dots ~ end_comment?}
-uppercase = { prefix? ~ "uppercase" ~ unicode_character ~ dots ~ end_comment?}
-litdigit = { "litdigit" ~ unicode_character ~ dots ~ end_comment?}
-sign = { prefix? ~ "sign" ~ unicode_character ~ dots_with_zero ~ end_comment?}
-math = { prefix? ~ "math" ~ unicode_character ~ dots ~ end_comment?}
+space = { prefix? ~ "space" ~ unicode_characters ~ dots_with_zero }
+punctuation = { prefix? ~ "punctuation" ~ unicode_characters ~ dots_with_zero }
+digit = { "digit" ~ unicode_characters ~ dots }
+uplow = { prefix? ~ "uplow" ~ unicode_characters ~ dots ~ ("," ~ dots)? }
+grouping = { "grouping" ~ ASCII_ALPHA+ ~ unicode_character{2}~ dots ~ "," ~ dots }
+letter = { prefix? ~ "letter" ~ unicode_characters ~ dots_with_zero }
+lowercase = { prefix? ~ "lowercase" ~ unicode_character ~ dots }
+uppercase = { prefix? ~ "uppercase" ~ unicode_character ~ dots }
+litdigit = { "litdigit" ~ unicode_character ~ dots }
+sign = { prefix? ~ "sign" ~ unicode_character ~ dots_with_zero }
+math = { prefix? ~ "math" ~ unicode_character ~ dots }
 //Braille Indicator Opcodes
-capsletter = { "capsletter" ~ dots ~ end_comment?}
-begcapsword = { prefix? ~ "begcapsword" ~ dots  ~ end_comment?}
-endcapsword = { prefix? ~ "endcapsword" ~ dots  ~ end_comment?}
+capsletter = { "capsletter" ~ dots }
+begcapsword = { prefix? ~ "begcapsword" ~ dots  }
+endcapsword = { prefix? ~ "endcapsword" ~ dots  }
 capsmodechars = { "capsmodechars" ~ unicode_characters }
 begcaps = { "begcaps" ~ dots}
 endcaps = { "endcaps" ~ dots}
@@ -139,7 +141,7 @@ noletsign = { "noletsign" ~ unicode_characters}
 noletsignbefore = { "noletsignbefore" ~ unicode_characters}
 noletsignafter = { "noletsignafter" ~ unicode_characters}
 nocontractsign = { "nocontractsign" ~ dots}
-numsign = { "numsign" ~ dots ~ end_comment?}
+numsign = { "numsign" ~ dots }
 numericnocontchars = { "numericnocontchars" ~ unicode_characters}
 numericmodechars = { "numericmodechars" ~ unicode_characters}
 midendnumericmodechars = { "midendnumericmodechars" ~ unicode_characters}
@@ -158,55 +160,55 @@ endemphphrase = { "endemphphrase" ~ ascii_characters ~ ("before" | "after") ~ do
 lenemphphrase = { "lenemphphrase" ~ ascii_characters ~ ASCII_DIGIT }
 // Computer braille
 // Special Symbol Opcodes
-decpoint = { "decpoint" ~ unicode_characters ~ dots ~ end_comment?}
-hyphen = { "hyphen" ~ unicode_characters ~ dots ~ end_comment?}
+decpoint = { "decpoint" ~ unicode_characters ~ dots }
+hyphen = { "hyphen" ~ unicode_characters ~ dots }
 // Special Processing Opcodes
 capsnocont = { "capsnocont"}
 // Translation Opcodes
 compbrl = { "compbrl" ~ unicode_characters }
 comp6 = { "comp6" ~ unicode_characters ~ dots}
 nocont = { "nocont" ~ unicode_characters}
-replace = { "replace" ~ unicode_characters ~ unicode_characters? ~ end_comment?}
-always = { prefix? ~ "always" ~ unicode_characters ~ dots ~ end_comment? }
-repeated = { prefix? ~ "repeated" ~ unicode_characters ~ dots_with_zero ~ end_comment? }
+replace = { "replace" ~ unicode_characters ~ unicode_characters? }
+always = { prefix? ~ "always" ~ unicode_characters ~ dots  }
+repeated = { prefix? ~ "repeated" ~ unicode_characters ~ dots_with_zero  }
 repword = { "repword" ~ unicode_characters ~ dots}
 rependword = { "rependword" ~ unicode_characters ~ dots ~ "," ~ dots}
-largesign = { "largesign" ~ unicode_characters ~ dots ~ end_comment?}
-word = { prefix? ~ "word" ~ unicode_characters ~ dots ~ end_comment?}
+largesign = { "largesign" ~ unicode_characters ~ dots }
+word = { prefix? ~ "word" ~ unicode_characters ~ dots }
 syllable = { "syllable" ~ unicode_characters ~ dots}
-joinword = { "joinword" ~ unicode_characters ~ dots ~ end_comment?}
-lowword = { "lowword" ~ unicode_characters ~ dots ~ end_comment?}
-contraction = { "contraction" ~ unicode_characters ~ end_comment?}
-sufword = { prefix? ~ "sufword" ~ unicode_characters ~ dots ~ end_comment?}
-prfword = { prefix? ~ "prfword" ~ unicode_characters ~ dots ~ end_comment?}
-begword = { prefix? ~ "begword" ~ unicode_characters ~ dots ~ end_comment?}
-begmidword = { prefix? ~ "begmidword" ~ unicode_characters ~ dots ~ end_comment?}
-midword = { prefix? ~ "midword" ~ unicode_characters ~ dots ~ end_comment?}
-midendword = { prefix? ~ "midendword" ~ unicode_characters ~ dots ~ end_comment?}
-endword = { prefix? ~ "endword" ~ unicode_characters ~ dots ~ end_comment?}
-partword = { "partword" ~ unicode_characters ~ dots ~ end_comment?}
-//exactdots = { "exactdots" ~ "@" ~ dots ~ end_comment?}
-prepunc = { prefix? ~ "prepunc" ~ unicode_characters ~ dots ~ end_comment?}
-postpunc = { prefix? ~ "postpunc" ~ unicode_characters ~ dots ~ end_comment?}
-begnum = { "begnum" ~ unicode_characters ~ dots ~ end_comment?}
-midnum = { "midnum" ~ unicode_characters ~ dots_with_zero ~ end_comment?}
-endnum = { "endnum" ~ unicode_characters ~ dots ~ end_comment?}
-joinnum = { "joinnum" ~ unicode_characters ~ dots ~ end_comment?}
+joinword = { "joinword" ~ unicode_characters ~ dots }
+lowword = { "lowword" ~ unicode_characters ~ dots }
+contraction = { "contraction" ~ unicode_characters }
+sufword = { prefix? ~ "sufword" ~ unicode_characters ~ dots }
+prfword = { prefix? ~ "prfword" ~ unicode_characters ~ dots }
+begword = { prefix? ~ "begword" ~ unicode_characters ~ dots }
+begmidword = { prefix? ~ "begmidword" ~ unicode_characters ~ dots }
+midword = { prefix? ~ "midword" ~ unicode_characters ~ dots }
+midendword = { prefix? ~ "midendword" ~ unicode_characters ~ dots }
+endword = { prefix? ~ "endword" ~ unicode_characters ~ dots }
+partword = { "partword" ~ unicode_characters ~ dots }
+//exactdots = { "exactdots" ~ "@" ~ dots }
+prepunc = { prefix? ~ "prepunc" ~ unicode_characters ~ dots }
+postpunc = { prefix? ~ "postpunc" ~ unicode_characters ~ dots }
+begnum = { "begnum" ~ unicode_characters ~ dots }
+midnum = { "midnum" ~ unicode_characters ~ dots_with_zero }
+endnum = { "endnum" ~ unicode_characters ~ dots }
+joinnum = { "joinnum" ~ unicode_characters ~ dots }
 
 // Character-Class Opcodes
-attribute = { "attribute" ~ (ascii_characters | ASCII_OCT_DIGIT ) ~ unicode_characters ~ end_comment?}
+attribute = { "attribute" ~ (ascii_characters | ASCII_OCT_DIGIT ) ~ unicode_characters }
 // Swap Opcodes
 swapcd = { "swapcd" ~ ascii_characters ~ dots ~ ("," ~ dots)* }
 swapdd = { "swapdd" ~ ascii_characters ~ ASCII_NONZERO_DIGIT+ ~ ("," ~ ASCII_NONZERO_DIGIT+)* ~ dots ~ ("," ~ dots)* }
 swapcc = { "swapcc" ~ ascii_characters ~ unicode_characters ~ unicode_characters }
 // Context and Multipass Opcodes
-context = { prefix? ~ "context" ~ multipass_test ~ multipass_action ~ end_comment?}
-pass2 = { prefix? ~ "pass2" ~ multipass_test ~ multipass_action ~ end_comment?}
-pass3 = { prefix? ~ "pass3" ~ multipass_test ~ multipass_action ~ end_comment?}
-pass4 = { prefix? ~ "pass4" ~ multipass_test ~ multipass_action ~ end_comment?}
+context = { prefix? ~ "context" ~ multipass_test ~ multipass_action }
+pass2 = { prefix? ~ "pass2" ~ multipass_test ~ multipass_action }
+pass3 = { prefix? ~ "pass3" ~ multipass_test ~ multipass_action }
+pass4 = { prefix? ~ "pass4" ~ multipass_test ~ multipass_action }
 // The correct Opcode
  // FIXME: probably not all of prefix is valid below
-correct = { prefix? ~ "correct" ~ multipass_test ~ multipass_action ~ end_comment?}
+correct = { prefix? ~ "correct" ~ multipass_test ~ multipass_action }
 
 multipass_test = { unicode_characters } // FIXME
 multipass_action = { unicode_characters } // FIXME
@@ -217,9 +219,9 @@ pre_pattern = { characters } // FIXME
 post_pattern = { characters } // FIXME
 
 // Miscellaneous Opcodes
-include = { "include" ~ file_characters ~ end_comment? }
-undefined = { "undefined" ~ dots_with_zero ~ end_comment?}
-display = { "display" ~ unicode_characters ~ dots_with_zero ~ end_comment?}
+include = { "include" ~ file_characters  }
+undefined = { "undefined" ~ dots_with_zero }
+display = { "display" ~ unicode_characters ~ dots_with_zero }
 multind = { "multind" ~ dots ~ ascii_characters+ }
 
 unknown_rule = { (!NEWLINE ~ ANY)+ }
