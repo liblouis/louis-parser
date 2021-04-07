@@ -213,6 +213,22 @@ mod tests {
     }
 
     #[test]
+    fn sign_with_comment() {
+	let parse_result = LouisParser::parse(Rule::rule_with_comment, "sign a 56-45-245 °")
+	    .unwrap().next().unwrap();
+
+	assert_eq!(parse_result.as_rule(), Rule::sign);
+
+	let mut inner_rules = parse_result.into_inner();
+
+	let chars = inner_rules.next().unwrap();
+	let dots = inner_rules.next().unwrap();
+
+	assert_eq!(chars.as_str(), "a");
+	assert_eq!(dots.as_str(), "56-45-245");
+    }
+
+    #[test]
     fn sign_with_escaped_unicode() {
 	assert_ok!(LouisParser::parse(Rule::sign, r"sign \x00b0 56-45-245"));
     }
