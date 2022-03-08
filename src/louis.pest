@@ -1,27 +1,25 @@
-table = {
-      SOI ~
-      ((comment | rule_with_comment | empty_line) ~ NEWLINE)* ~
-      EOI
-}
+table = { SOI ~ line* ~ EOI }
+line = _{ comment | rule_with_comment | empty_line }
 
-comment = _{ wsp_maybe ~ "#" ~ (!NEWLINE ~ ANY)* }
-empty_line = _{ wsp_maybe }
-rule_with_comment = _{ wsp_maybe ~ rule ~ (end_comment | wsp_maybe) }
+comment = { "#" ~ not_newline ~ NEWLINE }
+// end_comment = { sp ~ "#" ~ not_newline }
+end_comment = { sp ~ not_newline }
+not_newline = _{ (!NEWLINE ~ ANY)* }
+empty_line = { sp* ~ NEWLINE }
 
-wsp = _{ (" " | "\t")+ }
-wsp_maybe = _{ (" " | "\t")* }
+rule_with_comment = { rule ~ end_comment? ~ NEWLINE }
 
-rule = _{
+rule = {
     // Miscellaneous Opcodes
     include |
     undefined |
     display |
     multind |
+
     // Character-Definition Opcodes
     space |
     punctuation |
     digit |
-    uplow |
     grouping |
     letter |
     lowercase |
@@ -29,8 +27,11 @@ rule = _{
     litdigit |
     sign |
     math |
+
     // Braille Indicator Opcodes
+    modeletter |
     capsletter |
+    begmodeword |
     begcapsword |
     endcapsword |
     capsmodechars |
@@ -48,9 +49,23 @@ rule = _{
     numericnocontchars |
     numericmodechars |
     midendnumericmodechars |
+
+    begmodephrase |
+    endmodephrase |
+    lenmodephrase |
+
     // Opcodes for Standing Alone Sequences
+    seqdelimiter |
+    seqbeforechars |
+    seqafterchars |
+    seqafterpattern |
+    seqafterexpression |
+
     // Emphasis Opcodes
+    class |
     emphclass |
+    begemph |
+    endemph |
     noemphchars |
     emphletter |
     begemphword |
@@ -59,14 +74,14 @@ rule = _{
     begemphphrase |
     endemphphrase |
     lenemphphrase |
-    begemph |
-    endemph |
-    // Computer braille
+
     // Special Symbol Opcodes
     decpoint |
     hyphen |
+
     // Special Processing Opcodes
     capsnocont |
+
     // Translation Opcodes
     compbrl |
     comp6 |
@@ -90,163 +105,188 @@ rule = _{
     midendword |
     endword |
     partword |
-    //exactdots |
+    exactdots |
     prepunc |
     postpunc |
     begnum |
     midnum |
     endnum |
     joinnum |
+
+    // Computer braille
+    begcomp |
+    endcomp |
+
     // Character-Class Opcodes
     attribute |
+
     // Swap Opcodes
     swapcd |
     swapdd |
     swapcc |
+
     // Context and Multipass Opcodes
     context |
     pass2 |
     pass3 |
     pass4 |
+
     // The correct Opcode
     correct |
+
     // The match Opcode
     match_rule |
-    pre_pattern |
-    post_pattern |
-
-    unknown_rule }
-
-// Character-Definition Opcodes
-space = { prefix? ~ "space" ~ wsp ~ unicode_characters ~ wsp ~ dots_with_zero }
-punctuation = { prefix? ~ "punctuation" ~ wsp ~ unicode_characters ~ wsp ~ dots_with_zero }
-digit = { "digit" ~ wsp ~ unicode_characters ~ wsp ~ dots_with_zero }
-uplow = { prefix? ~ "uplow" ~ wsp ~ unicode_characters ~ wsp ~ dots ~ ("," ~ dots)? }
-grouping = { "grouping" ~ wsp ~ ASCII_ALPHA+ ~ wsp ~ unicode_character{2} ~ wsp ~ dots ~ "," ~ dots }
-letter = { prefix? ~ "letter" ~ wsp ~ unicode_characters ~ wsp ~ dots_with_zero }
-lowercase = { prefix? ~ "lowercase" ~ wsp ~ unicode_character ~ wsp ~ dots }
-uppercase = { prefix? ~ "uppercase" ~ wsp ~ unicode_character ~ wsp ~ dots }
-litdigit = { "litdigit" ~ wsp ~ unicode_character ~ wsp ~ dots }
-sign = { prefix? ~ "sign" ~ wsp ~ unicode_character ~ wsp ~ dots_with_zero }
-math = { prefix? ~ "math" ~ wsp ~ unicode_character ~ wsp ~ dots_with_zero }
-//Braille Indicator Opcodes
-capsletter = { "capsletter" ~ wsp ~ dots }
-begcapsword = { prefix? ~ "begcapsword" ~ wsp ~ dots  }
-endcapsword = { prefix? ~ "endcapsword" ~ wsp ~ dots  }
-capsmodechars = { "capsmodechars" ~ wsp ~ unicode_characters }
-begcaps = { "begcaps" ~ wsp ~ dots}
-endcaps = { "endcaps" ~ wsp ~ dots}
-begcapsphrase = { "begcapsphrase" ~ wsp ~ dots}
-endcapsphrase = { "endcapsphrase" ~ wsp ~ ("before" | "after") ~ wsp ~ dots}
-lencapsphrase = { "lencapsphrase" ~ wsp ~ ASCII_DIGIT }
-letsign = { "letsign" ~ wsp ~ dots}
-noletsign = { "noletsign" ~ wsp ~ unicode_characters}
-noletsignbefore = { "noletsignbefore" ~ wsp ~ unicode_characters}
-noletsignafter = { "noletsignafter" ~ wsp ~ unicode_characters}
-nocontractsign = { "nocontractsign" ~ wsp ~ dots}
-numsign = { "numsign" ~ wsp ~ dots }
-numericnocontchars = { "numericnocontchars" ~ wsp ~ unicode_characters}
-numericmodechars = { "numericmodechars" ~ wsp ~ unicode_characters}
-midendnumericmodechars = { "midendnumericmodechars" ~ wsp ~ unicode_characters}
-// Opcodes for Standing Alone Sequences
-// Emphasis Opcodes
-emphclass = { "emphclass" ~ wsp ~ ascii_characters }
-begemph = { "begemph" ~ wsp ~ ascii_characters ~ wsp ~ dots }
-endemph = { prefix? ~ "endemph" ~ wsp ~ ascii_characters ~ wsp ~ dots_with_zero }
-noemphchars = { "noemphchars" ~ wsp ~ ascii_characters ~ wsp ~ unicode_characters}
-emphletter = { "emphletter" ~ wsp ~ ascii_characters ~ wsp ~ dots }
-begemphword = { "begemphword" ~ wsp ~ ascii_characters ~ wsp ~ dots }
-endemphword = { "endemphword" ~ wsp ~ ascii_characters ~ wsp ~ dots }
-emphmodechars = { "emphmodechars" ~ wsp ~ ascii_characters ~ wsp ~ unicode_characters }
-begemphphrase = { "begemphphrase" ~ wsp ~ ascii_characters ~ wsp ~ dots }
-endemphphrase = { "endemphphrase" ~ wsp ~ ascii_characters ~ wsp ~ ("before" | "after") ~ wsp ~ dots }
-lenemphphrase = { "lenemphphrase" ~ wsp ~ ascii_characters ~ wsp ~ ASCII_DIGIT }
-// Computer braille
-// Special Symbol Opcodes
-decpoint = { "decpoint" ~ wsp ~ unicode_characters ~ wsp ~ dots }
-hyphen = { "hyphen" ~ wsp ~ unicode_characters ~ wsp ~ dots }
-// Special Processing Opcodes
-capsnocont = { "capsnocont"}
-// Translation Opcodes
-compbrl = { "compbrl" ~ wsp ~ unicode_characters }
-comp6 = { "comp6" ~ wsp ~ unicode_characters ~ wsp ~ dots}
-nocont = { "nocont" ~ wsp ~ unicode_characters}
-replace = { "replace" ~ wsp ~ unicode_characters ~ wsp ~ unicode_characters? }
-always = { prefix? ~ "always" ~ wsp ~ unicode_characters ~ wsp ~ dots_with_zero  }
-repeated = { prefix? ~ "repeated" ~ wsp ~ unicode_characters ~ wsp ~ dots_with_zero  }
-repword = { "repword" ~ wsp ~ unicode_characters ~ wsp ~ dots}
-rependword = { "rependword" ~ wsp ~ unicode_characters ~ wsp ~ dots ~ "," ~ dots}
-largesign = { "largesign" ~ wsp ~ unicode_characters ~ wsp ~ dots }
-word = { prefix? ~ "word" ~ wsp ~ unicode_characters ~ wsp ~ dots_with_zero }
-syllable = { "syllable" ~ wsp ~ unicode_characters ~ wsp ~ dots}
-joinword = { "joinword" ~ wsp ~ unicode_characters ~ wsp ~ dots }
-lowword = { "lowword" ~ wsp ~ unicode_characters ~ wsp ~ dots }
-contraction = { "contraction" ~ wsp ~ unicode_characters }
-sufword = { prefix? ~ "sufword" ~ wsp ~ unicode_characters ~ wsp ~ dots }
-prfword = { prefix? ~ "prfword" ~ wsp ~ unicode_characters ~ wsp ~ dots }
-begword = { prefix? ~ "begword" ~ wsp ~ unicode_characters ~ wsp ~ dots_with_zero }
-begmidword = { prefix? ~ "begmidword" ~ unicode_characters ~ wsp ~ dots }
-midword = { prefix? ~ "midword" ~ wsp ~ unicode_characters ~ wsp ~ dots }
-midendword = { prefix? ~ "midendword" ~ wsp ~ unicode_characters ~ wsp ~ dots }
-endword = { prefix? ~ "endword" ~ wsp ~ unicode_characters ~ wsp ~ dots }
-partword = { "partword" ~ wsp ~ unicode_characters ~ wsp ~ dots }
-//exactdots = { "exactdots" ~ "@" ~ dots }
-prepunc = { prefix? ~ "prepunc" ~ wsp ~ unicode_characters ~ wsp ~ dots }
-postpunc = { prefix? ~ "postpunc" ~ wsp ~ unicode_characters ~ wsp ~ dots_with_zero }
-begnum = { "begnum" ~ wsp ~ unicode_characters ~ wsp ~ dots }
-midnum = { "midnum" ~ wsp ~ unicode_characters ~ wsp ~ dots_with_zero }
-endnum = { "endnum" ~ wsp ~ unicode_characters ~ wsp ~ dots_with_zero }
-joinnum = { "joinnum" ~ wsp ~ unicode_characters ~ wsp ~ dots }
-
-// Character-Class Opcodes
-attribute = { "attribute" ~ wsp ~ (ascii_characters | ASCII_OCT_DIGIT ) ~ wsp ~ unicode_characters }
-// Swap Opcodes
-swapcd = { "swapcd" ~ wsp ~ ascii_characters ~ wsp ~ dots_with_zero ~ ("," ~ dots)* }
-swapdd = { "swapdd" ~ wsp ~ ascii_characters ~ wsp ~ ASCII_NONZERO_DIGIT+ ~ ("," ~ ASCII_NONZERO_DIGIT+)* ~ wsp ~ dots ~ ("," ~ dots)* }
-swapcc = { "swapcc" ~ wsp ~ ascii_characters ~ wsp ~ unicode_characters ~ wsp ~ unicode_characters }
-// Context and Multipass Opcodes
-context = { prefix? ~ "context" ~ wsp ~ multipass_test ~ wsp ~ multipass_action }
-pass2 = { prefix? ~ "pass2" ~ wsp ~ multipass_test ~ wsp ~ multipass_action }
-pass3 = { prefix? ~ "pass3" ~ wsp ~ multipass_test ~ wsp ~ multipass_action }
-pass4 = { prefix? ~ "pass4" ~ wsp ~ multipass_test ~ wsp ~ multipass_action }
-// The correct Opcode
- // FIXME: probably not all of prefix is valid below
-correct = { prefix? ~ "correct" ~ wsp ~ multipass_test ~ wsp ~ multipass_action }
-
-multipass_test = { unicode_characters } // FIXME
-multipass_action = { unicode_characters } // FIXME
-
-// The match Opcode
-match_rule = { "match" ~ pre_pattern ~ unicode_characters ~ post_pattern ~ dots }
-pre_pattern = { characters } // FIXME
-post_pattern = { characters } // FIXME
+    literal
+}
 
 // Miscellaneous Opcodes
-include = { "include" ~ file_characters  }
-undefined = { "undefined" ~ dots_with_zero }
-display = { "display" ~ unicode_characters ~ dots_with_zero }
-multind = { "multind" ~ dots ~ ascii_characters+ }
+include = { "include" ~ sp ~ filename  }
+undefined = { "undefined" ~ sp ~ dots }
+display = { prefix? ~ "display" ~ sp ~ chars ~ sp ~ dots }
+multind = { prefix? ~ "multind" ~ sp ~ dots ~ sp ~ name ~ ( sp ~ name)* }
 
-unknown_rule = { (!NEWLINE ~ ANY)+ }
+// Character-Definition Opcodes
+space = { prefix? ~ "space" ~ sp ~ chars ~ sp ~ dots }
+punctuation = { prefix? ~ "punctuation" ~ sp ~ chars ~ sp ~ dots }
+digit = { "digit" ~ sp ~ number ~ sp ~ dots }
+grouping = { "grouping" ~ sp ~ name ~ sp ~ chars ~ sp ~ dots ~ "," ~ dots }
+letter = { prefix? ~ "letter" ~ sp ~ chars ~ sp ~ dots }
+lowercase = { prefix? ~ "lowercase" ~ sp ~ char ~ sp ~ dots }
+uppercase = { prefix? ~ "uppercase" ~ sp ~ char ~ sp ~ dots }
+litdigit = { "litdigit" ~ sp ~ char ~ sp ~ dots }
+sign = { prefix? ~ "sign" ~ sp ~ char ~ sp ~ dots }
+math = { prefix? ~ "math" ~ sp ~ char ~ sp ~ dots }
 
-prefix = { ("noback" | "nofor" | "nocross") ~ wsp }
+//Braille Indicator Opcodes
+modeletter = { prefix? ~ "modeletter" ~ sp ~ name ~ sp ~ dots }
+capsletter = { prefix? ~ "capsletter" ~ sp ~ dots }
+begmodeword = { prefix? ~ "begmodeword" ~ sp ~ name ~ sp ~ dots }
+begcapsword = { prefix? ~ "begcapsword" ~ sp ~ dots  }
+endcapsword = { prefix? ~ "endcapsword" ~ sp ~ dots  }
+capsmodechars = { "capsmodechars" ~ sp ~ chars }
+begcaps = { "begcaps" ~ sp ~ dots}
+endcaps = { "endcaps" ~ sp ~ dots}
+begcapsphrase = { "begcapsphrase" ~ sp ~ dots}
+endcapsphrase = { "endcapsphrase" ~ sp ~ ("before" | "after") ~ sp ~ dots}
+lencapsphrase = { "lencapsphrase" ~ sp ~ ASCII_DIGIT }
+letsign = { "letsign" ~ sp ~ dots}
+noletsign = { "noletsign" ~ sp ~ chars}
+noletsignbefore = { "noletsignbefore" ~ sp ~ chars}
+noletsignafter = { "noletsignafter" ~ sp ~ chars}
+nocontractsign = { "nocontractsign" ~ sp ~ dots}
+numsign = { "numsign" ~ sp ~ dots }
+numericnocontchars = { "numericnocontchars" ~ sp ~ chars}
+numericmodechars = { "numericmodechars" ~ sp ~ chars}
+midendnumericmodechars = { "midendnumericmodechars" ~ sp ~ chars}
 
-dot = { ASCII_NONZERO_DIGIT | 'a'..'f' }
-dots = @{ "=" | dot+ ~ ("-" ~ dot+)*}
+begmodephrase = { "begmodephrase" ~ sp ~ name ~ sp ~ dots }
+endmodephrase = { "endmodephrase" ~ sp ~ name ~ sp ~ ("before" | "after") ~ sp ~ dots }
+lenmodephrase = { "lenmodephrase" ~ sp ~ name ~ sp ~ ASCII_DIGIT }
 
-dot_with_zero = { ASCII_DIGIT | 'a'..'f' }
-dots_with_zero = @{ dot_with_zero+ ~ ("-" ~ dot_with_zero+)* }
+// Opcodes for Standing Alone Sequences
+seqdelimiter = { "seqdelimiter" ~ sp ~ chars }
+seqbeforechars = { "seqbeforechars" ~ sp ~ chars }
+seqafterchars = { "seqafterchars" ~ sp ~ chars }
+seqafterpattern = { "seqafterpattern" ~ sp ~ chars }
+seqafterexpression = { "seqafterexpression" ~ sp ~ chars }
 
-ascii_characters = @{ ASCII_ALPHANUMERIC+ }
-file_characters = @{ (ASCII_ALPHANUMERIC | "." | "_" | "-" | "/")+ }
-unicode_characters = @{ unicode_character+ }
-unicode_character = { hex_char | escape_sequence | LETTER | NUMBER | PUNCTUATION | SYMBOL | MARK | "­"}
+// Emphasis Opcodes
+class = { "class" ~ sp ~ name ~ sp ~ chars }
+emphclass = { "emphclass" ~ sp ~ name }
+begemph = { "begemph" ~ sp ~ name ~ sp ~ dots }
+endemph = { prefix? ~ "endemph" ~ sp ~ name ~ sp ~ dots }
+noemphchars = { "noemphchars" ~ sp ~ name ~ sp ~ chars}
+emphletter = { "emphletter" ~ sp ~ name ~ sp ~ dots }
+begemphword = { "begemphword" ~ sp ~ name ~ sp ~ dots }
+endemphword = { "endemphword" ~ sp ~ name ~ sp ~ dots }
+emphmodechars = { "emphmodechars" ~ sp ~ name ~ sp ~ chars }
+begemphphrase = { "begemphphrase" ~ sp ~ name ~ sp ~ dots }
+endemphphrase = { "endemphphrase" ~ sp ~ name ~ sp ~ ("before" | "after") ~ sp ~ dots }
+lenemphphrase = { "lenemphphrase" ~ sp ~ name ~ sp ~ ASCII_DIGIT }
 
-characters = @{ char+ }
-char = { ASCII_ALPHANUMERIC | "." | "_" | "-" | "/" | "`" | "&" | "$" | "@" | hex_char}
+// Computer braille
+begcomp = { prefix? ~ "begcomp" ~ sp ~ dots }
+endcomp = { prefix? ~ "endcomp" ~ sp ~ dots }
+
+// Special Symbol Opcodes
+decpoint = { "decpoint" ~ sp ~ chars ~ sp ~ dots }
+hyphen = { "hyphen" ~ sp ~ chars ~ sp ~ dots }
+
+// Special Processing Opcodes
+capsnocont = { "capsnocont"}
+
+// Translation Opcodes
+compbrl = { "compbrl" ~ sp ~ chars }
+comp6 = { "comp6" ~ sp ~ chars ~ sp ~ dots}
+nocont = { "nocont" ~ sp ~ chars}
+replace = { "replace" ~ sp ~ chars ~ (sp ~ chars)? }
+always = { prefix? ~ with_class* ~ "always" ~ sp ~ chars ~ sp ~ dots  }
+repeated = { prefix? ~ "repeated" ~ sp ~ chars ~ sp ~ dots  }
+repword = { "repword" ~ sp ~ chars ~ sp ~ dots}
+rependword = { "rependword" ~ sp ~ chars ~ sp ~ dots ~ "," ~ dots}
+largesign = { "largesign" ~ sp ~ chars ~ sp ~ dots }
+word = { prefix? ~ with_class* ~ "word" ~ sp ~ chars ~ sp ~ dots }
+syllable = { "syllable" ~ sp ~ chars ~ sp ~ dots}
+joinword = { "joinword" ~ sp ~ chars ~ sp ~ dots }
+lowword = { "lowword" ~ sp ~ chars ~ sp ~ dots }
+contraction = { "contraction" ~ sp ~ chars }
+sufword = { prefix? ~ with_class* ~ "sufword" ~ sp ~ chars ~ sp ~ dots }
+prfword = { prefix? ~ with_class* ~ "prfword" ~ sp ~ chars ~ sp ~ dots }
+begword = { prefix? ~ with_class* ~ "begword" ~ sp ~ chars ~ sp ~ dots }
+begmidword = { prefix? ~ with_class* ~ "begmidword" ~ chars ~ sp ~ dots }
+midword = { prefix? ~ with_class* ~ "midword" ~ sp ~ chars ~ sp ~ dots }
+midendword = { prefix? ~ with_class* ~ "midendword" ~ sp ~ chars ~ sp ~ dots }
+endword = { prefix? ~ "endword" ~ sp ~ chars ~ sp ~ dots }
+partword = { "partword" ~ sp ~ chars ~ sp ~ dots }
+exactdots = { "exactdots" ~ "@" ~ dots }
+prepunc = { prefix? ~ "prepunc" ~ sp ~ chars ~ sp ~ dots }
+postpunc = { prefix? ~ "postpunc" ~ sp ~ chars ~ sp ~ dots }
+begnum = { "begnum" ~ sp ~ chars ~ sp ~ dots }
+midnum = { "midnum" ~ sp ~ chars ~ sp ~ dots }
+endnum = { "endnum" ~ sp ~ chars ~ sp ~ dots }
+joinnum = { "joinnum" ~ sp ~ chars ~ sp ~ dots }
+
+// Character-Class Opcodes
+attribute = { "attribute" ~ sp ~ (name | ASCII_OCT_DIGIT ) ~ sp ~ chars }
+// Swap Opcodes
+swapcd = { "swapcd" ~ sp ~ name ~ sp ~ dots ~ ("," ~ dots)* }
+swapdd = { "swapdd" ~ sp ~ name ~ sp ~ ASCII_NONZERO_DIGIT+ ~ ("," ~ ASCII_NONZERO_DIGIT+)* ~ sp ~ dots ~ ("," ~ dots)* }
+swapcc = { "swapcc" ~ sp ~ name ~ sp ~ chars ~ sp ~ chars }
+// Context and Multipass Opcodes
+context = { prefix? ~ "context" ~ sp ~ multipass_test ~ sp ~ multipass_action }
+pass2 = { prefix? ~ "pass2" ~ sp ~ multipass_test ~ sp ~ multipass_action }
+pass3 = { prefix? ~ "pass3" ~ sp ~ multipass_test ~ sp ~ multipass_action }
+pass4 = { prefix? ~ "pass4" ~ sp ~ multipass_test ~ sp ~ multipass_action }
+// The correct Opcode
+ // FIXME: probably not all of prefix is valid below
+correct = { prefix? ~ "correct" ~ sp ~ multipass_test ~ sp ~ multipass_action }
+
+multipass_test = { chars } // FIXME
+multipass_action = { chars } // FIXME
+
+// The match Opcode
+match_rule = { "match" ~ pre_pattern ~ chars ~ post_pattern ~ dots }
+pre_pattern = { chars } // FIXME
+post_pattern = { chars } // FIXME
+
+literal = { "literal" ~ sp ~ chars }
+
+prefix = { ("noback" | "nofor" | "nocross") ~ sp }
+
+with_class = { ( "before" | "after") ~ sp ~ name ~ sp }
+
+dot = { ASCII_DIGIT | 'a'..'f' }
+dots = @{ dot+ ~ ("-" ~ dot+)* }
+
+name = @{ ASCII_ALPHANUMERIC+ }
+filename = @{ (ASCII_ALPHANUMERIC | "." | "_" | "-" | "/")+ }
+number = { hex_char | ASCII_DIGIT } // FIXME: should be  /([0-9]|\p{N})/
+chars = @{ char+ }
+char = { hex_char | escape_sequence | LETTER | NUMBER | PUNCTUATION | SYMBOL | MARK | "­"}
+
+// char = { ASCII_ALPHANUMERIC | "." | "_" | "-" | "/" | "`" | "&" | "$" | "@" | hex_char}
 
 escape_sequence = { "\\\\" | "\\f" | "\\n" | "\\r" | "\\s" | "\\t" | "\\v" | "\\e"}
 
 hex_char = { "\\" ~ "x" ~ ASCII_HEX_DIGIT{4} }
-
-end_comment = _{ wsp ~ (!NEWLINE ~ ANY)+ }
+sp = _{ (" " | "\t")+ }

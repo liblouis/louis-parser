@@ -159,7 +159,7 @@ mod tests {
 
     #[test]
     fn dot_zero() {
-	assert_err!(LouisParser::parse(Rule::dot, "0"));
+	assert_ok!(LouisParser::parse(Rule::dot, "0"));
     }
 
     #[test]
@@ -203,8 +203,8 @@ mod tests {
     }
 
     #[test]
-    fn unicode_character() {
-	assert_ok!(LouisParser::parse(Rule::unicode_character, r"\x00b0"));
+    fn character() {
+	assert_ok!(LouisParser::parse(Rule::char, r"\x00b0"));
     }
 
     #[test]
