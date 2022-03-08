@@ -19,113 +19,140 @@ fn main() -> io::Result<()> {
 	    let table = pairs.next().unwrap();
 	    for rule in table.into_inner() {
 		match rule.as_rule() {
-		    // Miscellaneous Opcodes
-		    Rule::include => (),
-		    Rule::undefined => (),
-		    Rule::display => (),
-		    Rule::multind => (),
-		    // Character-Definition Opcodes
-		    Rule::space => (),
-		    Rule::punctuation => (),
-		    Rule::digit => (),
-		    Rule::uplow => (),
-		    Rule::grouping => (),
-		    Rule::letter => (),
-		    Rule::lowercase => (),
-		    Rule::uppercase => (),
-		    Rule::litdigit => (),
-		    Rule::sign => (),
-		    Rule::math => (),
-		    // Braille Indicator Opcodes
-		    Rule::capsletter => (),
-		    Rule::begcapsword => (),
-		    Rule::endcapsword => (),
-		    Rule::capsmodechars => (),
-		    Rule::begcaps => (),
-		    Rule::endcaps => (),
-		    Rule::begcapsphrase => (),
-		    Rule::endcapsphrase => (),
-		    Rule::lencapsphrase => (),
-		    Rule::letsign => (),
-		    Rule::noletsign => (),
-		    Rule::noletsignbefore => (),
-		    Rule::noletsignafter => (),
-		    Rule::nocontractsign => (),
-		    Rule::numsign => (),
-		    Rule::numericnocontchars => (),
-		    Rule::numericmodechars => (),
-		    Rule::midendnumericmodechars => (),
-		    // Opcodes for Standing Alone Sequences
-		    // Emphasis Opcodes
-		    Rule::emphclass => (),
-		    Rule::begemph => (),
-		    Rule::endemph => (),
-		    Rule::noemphchars => (),
-		    Rule::emphletter => (),
-		    Rule::begemphword => (),
-		    Rule::endemphword => (),
-		    Rule::emphmodechars => (),
-		    Rule::begemphphrase => (),
-		    Rule::endemphphrase => (),
-		    Rule::lenemphphrase => (),
-		    // Computer braille
-		    // Special Symbol Opcodes
-		    Rule::decpoint => (),
-		    Rule::hyphen => (),
-		    // Special Processing Opcodes
-		    Rule::capsnocont => (),
-		    // Translation Opcodes
-		    Rule::compbrl => (),
-		    Rule::comp6 => (),
-		    Rule::nocont => (),
-		    Rule::replace => (),
-		    Rule::always => (),
-		    Rule::repeated => (),
-		    Rule::repword => (),
-		    Rule::rependword => (),
-		    Rule::largesign => (),
-		    Rule::word => (),
-		    Rule::syllable => (),
-		    Rule::joinword => (),
-		    Rule::lowword => (),
-		    Rule::contraction => (),
-		    Rule::sufword => (),
-		    Rule::prfword => (),
-		    Rule::begword => (),
-		    Rule::begmidword => (),
-		    Rule::midword => (),
-		    Rule::midendword => (),
-		    Rule::endword => (),
-		    Rule::partword => (),
-		    Rule::prepunc => (),
-		    Rule::postpunc => (),
-		    Rule::begnum => (),
-		    Rule::midnum => (),
-		    Rule::endnum => (),
-		    Rule::joinnum => (),
-		    // Character-Class Opcodes
-		    Rule::attribute => (),
-		    // Swap Opcodes
-		    Rule::swapcd => (),
-		    Rule::swapdd => (),
-		    Rule::swapcc => (),
-		    // Context and Multipass Opcodes
-		    Rule::context => (),
-		    Rule::pass2 => (),
-		    Rule::pass3 => (),
-		    Rule::pass4 => (),
-		    // The correct Opcode
-		    Rule::correct => (),
-		    // The match Opcode
-		    Rule::match_rule => (),
-		    Rule::pre_pattern => (),
-		    Rule::post_pattern => (),
+		    Rule::comment => { print!("{}", rule.as_str()) },
+		    Rule::empty_line => { print!("{}", rule.as_str()) },
+
+		    Rule::rule_with_comment => {
+			let mut inner_rules = rule.into_inner();
+			let rule = inner_rules.next().unwrap().as_str();
+			let end_comment = inner_rules.next();
+			match end_comment {
+			    Some(pair) => {
+				let trimmed = pair.as_str().trim().trim_start_matches('#').trim_start();
+				println!("{}\t# {}", rule, trimmed);
+			    },
+			    None => {
+				println!("{}", rule);
+			    }
+			}
+		    }
+		    // // Miscellaneous Opcodes
+		    // Rule::include => (),
+		    // Rule::undefined => (),
+		    // Rule::display => (),
+		    // Rule::multind => (),
+		    // // Character-Definition Opcodes
+		    // Rule::space => (),
+		    // Rule::punctuation => (),
+		    // Rule::digit => (),
+		    // Rule::grouping => (),
+		    // Rule::letter => (),
+		    // Rule::lowercase => (),
+		    // Rule::uppercase => (),
+		    // Rule::litdigit => (),
+		    // Rule::sign => {
+		    //		// let mut inner_rules = rule.into_inner();
+		    //		// let chars = inner_rules.next().unwrap().as_str();
+		    //		// let dots = inner_rules.next().unwrap().as_str();
+		    //		// println!("\tsign\t{}\t{}", chars, dots);
+		    // },
+		    // Rule::math => (),
+		    // // Braille Indicator Opcodes
+		    // Rule::capsletter => (),
+		    // Rule::begcapsword => (),
+		    // Rule::endcapsword => (),
+		    // Rule::capsmodechars => (),
+		    // Rule::begcaps => (),
+		    // Rule::endcaps => (),
+		    // Rule::begcapsphrase => (),
+		    // Rule::endcapsphrase => (),
+		    // Rule::lencapsphrase => (),
+		    // Rule::letsign => (),
+		    // Rule::noletsign => (),
+		    // Rule::noletsignbefore => (),
+		    // Rule::noletsignafter => (),
+		    // Rule::nocontractsign => (),
+		    // Rule::numsign => (),
+		    // Rule::numericnocontchars => (),
+		    // Rule::numericmodechars => (),
+		    // Rule::midendnumericmodechars => (),
+		    // // Opcodes for Standing Alone Sequences
+		    // // Emphasis Opcodes
+		    // Rule::emphclass => (),
+		    // Rule::begemph => (),
+		    // Rule::endemph => (),
+		    // Rule::noemphchars => (),
+		    // Rule::emphletter => (),
+		    // Rule::begemphword => (),
+		    // Rule::endemphword => (),
+		    // Rule::emphmodechars => (),
+		    // Rule::begemphphrase => (),
+		    // Rule::endemphphrase => (),
+		    // Rule::lenemphphrase => (),
+		    // // Computer braille
+		    // // Special Symbol Opcodes
+		    // Rule::decpoint => (),
+		    // Rule::hyphen => (),
+		    // // Special Processing Opcodes
+		    // Rule::capsnocont => (),
+
+		    // // Translation Opcodes
+		    // Rule::compbrl => (),
+		    // Rule::comp6 => (),
+		    // Rule::nocont => (),
+		    // Rule::replace => (),
+		    // Rule::always => (),
+		    // Rule::repeated => (),
+		    // Rule::repword => (),
+		    // Rule::rependword => (),
+		    // Rule::largesign => (),
+		    // Rule::word => (),
+		    // Rule::syllable => (),
+		    // Rule::joinword => (),
+		    // Rule::lowword => (),
+		    // Rule::contraction => (),
+		    // Rule::sufword => (),
+		    // Rule::prfword => (),
+		    // Rule::begword => (),
+		    // Rule::begmidword => (),
+		    // Rule::midword => (),
+		    // Rule::midendword => (),
+		    // Rule::endword => (),
+		    // Rule::partword => (),
+		    // Rule::prepunc => (),
+		    // Rule::postpunc => (),
+		    // Rule::begnum => (),
+		    // Rule::midnum => (),
+		    // Rule::endnum => (),
+		    // Rule::joinnum => (),
+
+		    // // Computer braille
+		    // Rule::begcomp => (),
+		    // Rule::endcomp => (),
+
+		    // // Character-Class Opcodes
+		    // Rule::attribute => (),
+		    // // Swap Opcodes
+		    // Rule::swapcd => (),
+		    // Rule::swapdd => (),
+		    // Rule::swapcc => (),
+		    // // Context and Multipass Opcodes
+		    // Rule::context => (),
+		    // Rule::pass2 => (),
+		    // Rule::pass3 => (),
+		    // Rule::pass4 => (),
+		    // // The correct Opcode
+		    // Rule::correct => (),
+		    // // The match Opcode
+		    // Rule::match_rule => (),
+		    // Rule::pre_pattern => (),
+		    // Rule::post_pattern => (),
 
 		    Rule::EOI => (),
-		    Rule::unknown_rule => {
-			println!("{:?}, {:?}", rule.as_rule(), rule.as_str());
-		    }
-		    _ => unreachable!(),
+		    _ => {
+			println!("{}", rule.as_str());
+			unreachable!()
+		    },
 		}
 	    }
 	}
@@ -238,5 +265,3 @@ mod tests {
 	assert_ok!(LouisParser::parse(Rule::punctuation, r"punctuation \x00a0 0		NO-BREAK SPACE"));
     }
 }
-
-
