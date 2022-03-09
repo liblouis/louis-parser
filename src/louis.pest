@@ -22,6 +22,7 @@ rule = {
     digit |
     grouping |
     letter |
+    base |
     lowercase |
     uppercase |
     litdigit |
@@ -150,7 +151,8 @@ space = { prefix? ~ "space" ~ sp ~ chars ~ sp ~ dots }
 punctuation = { prefix? ~ "punctuation" ~ sp ~ chars ~ sp ~ dots }
 digit = { "digit" ~ sp ~ number ~ sp ~ dots }
 grouping = { "grouping" ~ sp ~ name ~ sp ~ chars ~ sp ~ dots ~ "," ~ dots }
-letter = { prefix? ~ "letter" ~ sp ~ chars ~ sp ~ dots }
+letter = { prefix? ~ "letter" ~ sp ~ chars ~ sp ~ dots_or_equal }
+base = { "base" ~ sp ~ name ~ sp ~ char ~ sp ~ char }
 lowercase = { prefix? ~ "lowercase" ~ sp ~ char ~ sp ~ dots }
 uppercase = { prefix? ~ "uppercase" ~ sp ~ char ~ sp ~ dots }
 litdigit = { "litdigit" ~ sp ~ char ~ sp ~ dots }
@@ -193,7 +195,7 @@ seqafterexpression = { "seqafterexpression" ~ sp ~ chars }
 // Emphasis Opcodes
 class = { "class" ~ sp ~ name ~ sp ~ chars }
 emphclass = { "emphclass" ~ sp ~ name }
-begemph = { "begemph" ~ sp ~ name ~ sp ~ dots }
+begemph = { prefix? ~ "begemph" ~ sp ~ name ~ sp ~ dots }
 endemph = { prefix? ~ "endemph" ~ sp ~ name ~ sp ~ dots }
 noemphchars = { "noemphchars" ~ sp ~ name ~ sp ~ chars}
 emphletter = { "emphletter" ~ sp ~ name ~ sp ~ dots }
@@ -210,47 +212,47 @@ endcomp = { prefix? ~ "endcomp" ~ sp ~ dots }
 
 // Special Symbol Opcodes
 decpoint = { "decpoint" ~ sp ~ chars ~ sp ~ dots }
-hyphen = { "hyphen" ~ sp ~ chars ~ sp ~ dots }
+hyphen = { prefix? ~ "hyphen" ~ sp ~ chars ~ sp ~ dots }
 
 // Special Processing Opcodes
 capsnocont = { "capsnocont"}
 
 // Translation Opcodes
-compbrl = { "compbrl" ~ sp ~ chars }
-comp6 = { "comp6" ~ sp ~ chars ~ sp ~ dots}
+compbrl = { prefix? ~ "compbrl" ~ sp ~ chars }
+comp6 = { "comp6" ~ sp ~ chars ~ sp ~ dots_or_equal }
 nocont = { "nocont" ~ sp ~ chars}
 replace = { "replace" ~ sp ~ chars ~ (sp ~ chars)? }
-always = { prefix? ~ with_class* ~ "always" ~ sp ~ chars ~ sp ~ dots  }
+always = { prefix? ~ with_class* ~ "always" ~ sp ~ chars ~ sp ~ dots_or_equal }
 repeated = { prefix? ~ "repeated" ~ sp ~ chars ~ sp ~ dots  }
 repword = { "repword" ~ sp ~ chars ~ sp ~ dots}
 rependword = { "rependword" ~ sp ~ chars ~ sp ~ dots ~ "," ~ dots}
 largesign = { "largesign" ~ sp ~ chars ~ sp ~ dots }
-word = { prefix? ~ with_class* ~ "word" ~ sp ~ chars ~ sp ~ dots }
-syllable = { "syllable" ~ sp ~ chars ~ sp ~ dots}
+word = { prefix? ~ with_class* ~ "word" ~ sp ~ chars ~ sp ~ dots_or_equal }
+syllable = { "syllable" ~ sp ~ chars ~ sp ~ dots_or_equal }
 joinword = { "joinword" ~ sp ~ chars ~ sp ~ dots }
-lowword = { "lowword" ~ sp ~ chars ~ sp ~ dots }
+lowword = { prefix? ~ "lowword" ~ sp ~ chars ~ sp ~ dots }
 contraction = { "contraction" ~ sp ~ chars }
-sufword = { prefix? ~ with_class* ~ "sufword" ~ sp ~ chars ~ sp ~ dots }
-prfword = { prefix? ~ with_class* ~ "prfword" ~ sp ~ chars ~ sp ~ dots }
-begword = { prefix? ~ with_class* ~ "begword" ~ sp ~ chars ~ sp ~ dots }
-begmidword = { prefix? ~ with_class* ~ "begmidword" ~ chars ~ sp ~ dots }
-midword = { prefix? ~ with_class* ~ "midword" ~ sp ~ chars ~ sp ~ dots }
-midendword = { prefix? ~ with_class* ~ "midendword" ~ sp ~ chars ~ sp ~ dots }
-endword = { prefix? ~ "endword" ~ sp ~ chars ~ sp ~ dots }
-partword = { "partword" ~ sp ~ chars ~ sp ~ dots }
+sufword = { prefix? ~ with_class* ~ "sufword" ~ sp ~ chars ~ sp ~ dots_or_equal }
+prfword = { prefix? ~ with_class* ~ "prfword" ~ sp ~ chars ~ sp ~ dots_or_equal }
+begword = { prefix? ~ with_class* ~ "begword" ~ sp ~ chars ~ sp ~ dots_or_equal }
+begmidword = { prefix? ~ with_class* ~ "begmidword" ~ sp ~ chars ~ sp ~ dots_or_equal }
+midword = { prefix? ~ with_class* ~ "midword" ~ sp ~ chars ~ sp ~ dots_or_equal }
+midendword = { prefix? ~ with_class* ~ "midendword" ~ sp ~ chars ~ sp ~ dots_or_equal }
+endword = { prefix? ~ with_class* ~ "endword" ~ sp ~ chars ~ sp ~ dots_or_equal }
+partword = { prefix? ~ with_class* ~ "partword" ~ sp ~ chars ~ sp ~ dots_or_equal }
 exactdots = { "exactdots" ~ "@" ~ dots }
 prepunc = { prefix? ~ "prepunc" ~ sp ~ chars ~ sp ~ dots }
 postpunc = { prefix? ~ "postpunc" ~ sp ~ chars ~ sp ~ dots }
-begnum = { "begnum" ~ sp ~ chars ~ sp ~ dots }
-midnum = { "midnum" ~ sp ~ chars ~ sp ~ dots }
-endnum = { "endnum" ~ sp ~ chars ~ sp ~ dots }
-joinnum = { "joinnum" ~ sp ~ chars ~ sp ~ dots }
+begnum = { prefix? ~ "begnum" ~ sp ~ chars ~ sp ~ dots }
+midnum = { prefix? ~ "midnum" ~ sp ~ chars ~ sp ~ dots }
+endnum = { prefix? ~ "endnum" ~ sp ~ chars ~ sp ~ dots_or_equal }
+joinnum = { prefix? ~ "joinnum" ~ sp ~ chars ~ sp ~ dots }
 
 // Character-Class Opcodes
 attribute = { "attribute" ~ sp ~ (name | ASCII_OCT_DIGIT ) ~ sp ~ chars }
 // Swap Opcodes
-swapcd = { "swapcd" ~ sp ~ name ~ sp ~ dots ~ ("," ~ dots)* }
-swapdd = { "swapdd" ~ sp ~ name ~ sp ~ ASCII_NONZERO_DIGIT+ ~ ("," ~ ASCII_NONZERO_DIGIT+)* ~ sp ~ dots ~ ("," ~ dots)* }
+swapcd = { "swapcd" ~ sp ~ name ~ sp ~ chars ~ sp ~ dots ~ ("," ~ dots)* }
+swapdd = { "swapdd" ~ sp ~ name ~ sp ~ dot+ ~ ("," ~ dot+)* ~ sp ~ dots ~ ("," ~ dots)* }
 swapcc = { "swapcc" ~ sp ~ name ~ sp ~ chars ~ sp ~ chars }
 // Context and Multipass Opcodes
 context = { prefix? ~ "context" ~ sp ~ multipass_test ~ sp ~ multipass_action }
@@ -265,22 +267,24 @@ multipass_test = { chars } // FIXME
 multipass_action = { chars } // FIXME
 
 // The match Opcode
-match_rule = { "match" ~ pre_pattern ~ chars ~ post_pattern ~ dots }
+with_match = { ( "empmatchbefore" ~ sp ~ "empmatchafter" | "empmatchafter" ~ sp ~ "empmatchbefore" | "empmatchbefore" | "empmatchafter" ) ~ sp}
+match_rule = { prefix? ~ with_class* ~ with_match? ~ "match" ~ sp ~ pre_pattern ~ sp ~ chars ~ sp ~ post_pattern ~ sp ~ dots_or_equal }
 pre_pattern = { chars } // FIXME
 post_pattern = { chars } // FIXME
 
 literal = { "literal" ~ sp ~ chars }
 
-prefix = { ("noback" | "nofor" | "nocross") ~ sp }
+prefix = { ( "noback" ~ sp ~ "nocross" | "nofor" ~ sp ~ "nocross" | "noback" | "nofor" | "nocross" ) ~ sp }
 
 with_class = { ( "before" | "after") ~ sp ~ name ~ sp }
 
 dot = { ASCII_DIGIT | 'a'..'f' }
 dots = @{ dot+ ~ ("-" ~ dot+)* }
+dots_or_equal = { "=" | dots }
 
 name = @{ ASCII_ALPHANUMERIC+ }
 filename = @{ (ASCII_ALPHANUMERIC | "." | "_" | "-" | "/")+ }
-number = { hex_char | ASCII_DIGIT } // FIXME: should be  /([0-9]|\p{N})/
+number = { hex_char | NUMBER }
 chars = @{ char+ }
 char = { hex_char | escape_sequence | LETTER | NUMBER | PUNCTUATION | SYMBOL | MARK | "­"}
 
