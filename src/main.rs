@@ -161,7 +161,7 @@ fn main() -> io::Result<()> {
 	    }
 	}
 	Err(error) => {
-	    println!("{:?}", error.with_path(&path));
+	    eprintln!("{:?}", error.with_path(&path));
 	}
     }
 
