@@ -28,8 +28,12 @@ fn main() -> io::Result<()> {
 			let end_comment = inner_rules.next();
 			match end_comment {
 			    Some(pair) => {
-				let trimmed = pair.as_str().trim().trim_start_matches('#').trim_start();
-				println!("{}\t# {}", rule, trimmed);
+				let comment = pair.as_str().trim().trim_start_matches('#').trim_start();
+				if comment.is_empty() {
+				    println!("{}", rule);
+				} else {
+				    println!("{}\t# {}", rule, comment);
+				}
 			    },
 			    None => {
 				println!("{}", rule);
