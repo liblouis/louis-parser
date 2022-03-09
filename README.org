@@ -35,17 +35,14 @@ like pest would be of tremendeous help to avoid the buffer overflow
 problems.
 
 * Status
-At the moment this is nothing but an experiment, basically an extended
-afternoon hack. There is a non-complete syntax description with code
-to print the generated AST.
+The grammar is pretty complete thanks to the work done on the
+tree-sitter for liblouis.
 
-Support for meatier bits of the liblouis syntax such as the test and
-action expressions in the multipart opcodes is missing. Implicit
-inline comments which are used in liblouis very often are also not
-supported.
-
-At the same time it is IMHO amazing how far you can get with very
-little code...
+The parser can handle all of the tables from the liblouis distribution
+with the exception of the files that contain continuation lines
+(da-dk-g16-lit.ctb, da-dk-g26-lit.ctb and da-dk-g26l-lit.ctb). Also it
+fails on two tables that contain weird unicode chars inside a cotext
+or match opcode (hu-hu-g2.ctb and my-g2.ctb)
 
 * Prerequisites
 
