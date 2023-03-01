@@ -7,7 +7,7 @@ end_comment = { sp ~ not_newline }
 not_newline = _{ (!NEWLINE ~ ANY)* }
 empty_line = { sp* ~ NEWLINE }
 
-rule_with_comment = { rule ~ end_comment? ~ NEWLINE }
+rule_with_comment = _{ rule ~ end_comment? ~ NEWLINE }
 
 rule = {
     // Miscellaneous Opcodes
