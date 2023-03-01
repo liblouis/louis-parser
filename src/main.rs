@@ -245,12 +245,14 @@ mod tests {
 
     #[test]
     fn sign_with_comment() {
-	let parse_result = LouisParser::parse(Rule::rule_with_comment, "sign a 56-45-245 °")
+	let parse_result = LouisParser::parse(Rule::rule_with_comment, "sign a 56-45-245 °\n")
 	    .unwrap().next().unwrap();
 
-	assert_eq!(parse_result.as_rule(), Rule::sign);
+	let sign_rule = parse_result.into_inner().next().unwrap();
 
-	let mut inner_rules = parse_result.into_inner();
+	assert_eq!(sign_rule.as_rule(), Rule::sign);
+
+	let mut inner_rules = sign_rule.into_inner();
 
 	let chars = inner_rules.next().unwrap();
 	let dots = inner_rules.next().unwrap();
